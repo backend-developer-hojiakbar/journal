@@ -1,14 +1,14 @@
 import React from 'react';
 import Hero from '../components/Hero';
-import ScheduleSection from '../components/ScheduleSection'; // Yo'lni tekshirish
-import LatestArticles from '../components/LatestArticles';
+import JournalInfo from '../components/JournalInfo';
+import NewsSection from '../components/NewsSection';
 
 const Home = () => {
   return (
     <div>
       <Hero />
-      <ScheduleSection />
-      <LatestArticles />
+      <JournalInfo />
+      <NewsSection />
     </div>
   );
 };

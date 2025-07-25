@@ -1,148 +1,66 @@
 import React from 'react';
 
+const tahririyatQX = [
+  { name: "Abduraxmonov Ibrohim Yulchiyevich", details: "O‘zbekiston Respublikasi Qishloq xo‘jaligi vaziri, biologiya fanlari doktori, akademik" },
+  { name: "Xamrayev Shavkat Raximovich", details: "O‘zbekiston Respublikasi Suv xo‘jaligi vaziri, qishloq xo‘jalik fanlari nomzodi" },
+  { name: "Tuychiyev Anvar Mirzaaxmedovich", details: "O'zbekiston Respublikasi Oliy Majlisi Senatining Agrar, suv xo‘jaligi masalalari va ekologiya qo‘mitasi raisi" },
+  { name: "Mamutov Ravshan Aminaddinovich", details: "Oʼzbekiston Respublikasi Oliy Majlisi Qonunchilik palatasining Аgrar va suv xoʼjaligi masalalari qoʼmitasi raisi" },
+  { name: "Namozov Shodmon Ergashevich", details: "Qishloq xo‘jaligida bilim va innovatsiyalar milliy markazi direktori, qishloq xo‘jalik fanlari doktori, akademik" },
+  { name: "Vahobov Abrol Jabarovich", details: "Bosh vazirning agrar va oziq-ovqat sohalarini rivojlantirish masalalari bo‘yicha maslahatchisi" },
+  { name: "Norqobilov Bahromjon Toʻrayevich", details: "Veterinariya va chorvachilikni rivojlantirish davlat qoʻmitasi raisi, veterinariya fanlari doktori, professor" },
+  { name: "Teshayev Shuhrat Jo‘raqulovich", details: "Qoraqalpog'iston Respublikasi Vazirlar Kengashi raisining qishloq va suv masalalari bo'yicha o'rinbosari, qishloq xo‘jaligi fanlari doktori, professor" },
+  { name: "Mirzaev Bahodir Suyunovich", details: "“Toshkent irrigatsiya va qishloq xoʻjaligini mexanizatsiyalash muxandislari instituti“ Milliy tadqiqot universiteti rektori, texnika fanlari doktori, professor" },
+  { name: "Oblomuradov Narzullo Naimovich", details: "Toshkent davlat agrar universiteti rektori,  iqtisod fanlari doktori, professor" },
+  { name: "Siddiqov Ravshanbek Inomjonovich", details: "Don va dukkakli ekinlar ilmiy-tadqiqot instituti direktori, qishloq xoʻjaligi fanlari doktori, professor" },
+  { name: "Yunusov Xudaynazar Beknazarovich", details: "Samarqand davlat veterinariya meditsinasi, chorvachilik va biotexnologiyalar universiteti rektori, biologiya fanlari doktori, professor" },
+  { name: "Mirsaidov Mirziyod Mirsaidovich", details: "Oʻzbekiston Fanlar akademiyasi akademigi, texnika fanlari doktori, professor" },
+  { name: "Ergashev Ibrohim Kenjaboyevich", details: "Oʻsimliklar karantini va himoyasi agentligi bosh direktori" },
+];
+
+const tahririyatAI = [
+  "Shodmon NAMOZOV (Hay’at raisi)", "Maxfurat AMANOVA", "Sayfulla AXMEDOV", "Ma’muraxon ATABAYEVA", "Qobiljon AZIZOV", "Shuxrat BOBOMURODOV", "Qalandar BOBOBEKOV", "Asadullo DAMINOV", "Dilorom YORMATOVA", "Shuxrat JABBOROV", "Abdirasuli IBRAGIMOV", "Odiljon IBRAGIMOV", "Uzakbay ISMAYLOV", "Baxodir ISROILOV", "Sanoatxon ZOKIROVA", "Abdulla MADALIYEV", "Bunyod MAMARAXIMOV", "Abbosxon MA`RUPOV", "Rustam NIZOMOV", "Ruziboy NORMAXMATOV", "Toshtemir OSTONAQULOV", "Shuxrat OTAJONOV", "Faxriddin RASULOV", "Shuxrat RIZAYEV", "Sobir SANAYEV", "Mas’ud SATTOROV", "Yelmurat TORENIYAZOV", "Dilbar TUNGUSHOVA", "Ruzimbay TURGANBAYEV", "Abdusalim TO‘XTAQO‘ZIYEV", "To‘lqin FARMONOV", "Baxodir XOLIQOV", "Do‘stmuhammad XOLMIRZAYEV", "Ne`matulla XUDAYBERGANOV", "Norqul XUSHMATOV", "Rashid HAKIMOV", "Feruza HASANOVA", "Akrom HOSHIMOV", "Dilfuza EGAMBERDIYEVA", "Abdug‘ani ELMURODOV", "Shamsi ESANBAYEV", "Islom QO‘ZIYEV"
+];
+
 const About = () => {
-  const schedules = [
-    { time: "02.00.00", subject: "Kimyo fanlari" },
-    { time: "03.00.00", subject: "Biologiya fanlari" },
-    { time: "14.00.00", subject: "Tibbiyot fanlari" },
-    { time: "15.00.00", subject: "Farmatsevtika fanlari" },
-  ];
-
-  const archives = [
-    "2024 – №4",
-    "2024 – №3",
-    "2024 – №2",
-    "2024 – №1",
-  ];
-
   return (
-    <div className="py-8">
+    <div className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Ilmiy-amaliy jurnal qismi (ScheduleSection dan olingan) */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            Ilmiy-amaliy jurnal
-          </h2>
-          <p className="mt-3 text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl">
-            Ta'sischilar: Toshkent vaksina va zardoblar ilmiy-tadqiqot instituti
-          </p>
-          <p className="mt-3 text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl">
-            “Farmatsiya, Immunitet va Vaktsina” ilmiy-amaliy jurnali O‘zbekiston Respublikasi Oliy Attestatsiya Komissiyasi tomonidan
-            resenzialanadigan ilmiy jurnallar ro‘yxatiga kiritilgan.
-          </p>
-        </div>
-
-        {/* Jadval qismi */}
-        <div className="mt-12">
-          <div className="border border-gray-300 rounded-lg overflow-hidden">
-            {schedules.map((schedule, index) => (
-              <div
-                key={index}
-                className={`flex justify-between items-center p-4 ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } ${index !== schedules.length - 1 ? "border-b border-gray-300" : ""}`}
-              >
-                <span className="text-lg font-medium text-gray-900">
-                  {schedule.time}
-                </span>
-                <span className="text-lg text-gray-900">{schedule.subject}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Arxiv qismi */}
         
+        <div className="bg-white rounded-lg shadow-md p-8">
+          <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">TAHRIRIYAT</h1>
+          
+          <div className="text-center mb-10">
+            <p className="text-lg text-gray-700"><strong>Muassis:</strong> O‘zbekiston Respublikasi Qishloq xo'jaligi va Suv xo'jaligi vazirliklari</p>
+            <p className="text-lg text-gray-700 mt-2"><strong>Bosh muharrir:</strong> Tohir DOLIYEV</p>
+            <p className="text-lg text-gray-700 mt-2"><strong>Mas'ul kotib:</strong> Ulug'bek MAMAJONOV</p>
+          </div>
 
-        {/* Tahririyat a'zolari */}
-        <div className="bg-white rounded-lg shadow-md p-8 mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 text-center">TAHRIRIYAT</h2>
-          <h3 className="text-xl font-bold text-gray-800 text-center mt-6">BOSH MUHARIR</h3>
-          <div className="border border-gray-300 rounded-lg p-4 mt-4">
-            <div className="flex items-start">
-              <img
-                src="https://via.placeholder.com/80" // Default odam rasmi
-                alt="Bosh muharrir"
-                className="w-20 h-20 rounded-full mr-4"
-              />
-              <div>
-                <p className="text-gray-600 font-medium">FIO: Menglikulov Erkin Eshdavlatovich</p>
-                <p className="text-gray-500 text-sm">Ish joyi: Davlat ilmiy-loyihalashtirish instituti “Uzdavjerloixa”</p>
-                <p className="text-gray-500 text-sm">Lavozimi: Bosh muharrir</p>
-              </div>
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">"O‘zbekiston qishloq va suv xo‘jaligi” jurnali Tahrir hay`ati a`zolari</h2>
+            <div className="space-y-4">
+              {tahririyatQX.map((member, index) => (
+                <div key={index} className="border-b border-gray-200 pb-3">
+                  <p className="text-gray-800 font-semibold">{member.name}</p>
+                  <p className="text-gray-600 text-sm">{member.details}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-800 text-center mt-6">HAY’AT A’ZOLARI</h3>
-          <div className="space-y-6 mt-4">
-            <div className="border border-gray-300 rounded-lg p-4">
-              <div className="flex items-start">
-                <img
-                  src="https://via.placeholder.com/80" // Default odam rasmi
-                  alt="Hay'at a'zosi"
-                  className="w-20 h-20 rounded-full mr-4"
-                />
-                <div>
-                  <p className="text-gray-600 font-medium">FIO: Abduraxmonov Ibrohim Yulchiyevich</p>
-                  <p className="text-gray-500 text-sm">Ilmiy darajasi va unvoni: Doktor biologik fanlar, Akademik</p>
-                  <p className="text-gray-500 text-sm">Ish joyi: O‘zbekiston Respublikasi Qishloq xo‘jaligi vazirligi</p>
-                  <p className="text-gray-500 text-sm">Lavozimi: Muharrir</p>
-                </div>
-              </div>
-            </div>
-            <div className="border border-gray-300 rounded-lg p-4">
-              <div className="flex items-start">
-                <img
-                  src="https://via.placeholder.com/80" // Default odam rasmi
-                  alt="Hay'at a'zosi"
-                  className="w-20 h-20 rounded-full mr-4"
-                />
-                <div>
-                  <p className="text-gray-600 font-medium">FIO: Norboyev Bahrom To‘rayevich</p>
-                  <p className="text-gray-500 text-sm">Ilmiy darajasi va unvoni: Doktor falsafa va biologik fanlar (PhD)</p>
-                  <p className="text-gray-500 text-sm">Ish joyi: O‘zbekiston Respublikasi Hayvonchilik rivojlantirish davlat qo‘mitasi</p>
-                  <p className="text-gray-500 text-sm">Lavozimi: Prezidenti Komitet</p>
-                </div>
-              </div>
-            </div>
-            <div className="border border-gray-300 rounded-lg p-4">
-              <div className="flex items-start">
-                <img
-                  src="https://via.placeholder.com/80" // Default odam rasmi
-                  alt="Hay'at a'zosi"
-                  className="w-20 h-20 rounded-full mr-4"
-                />
-                <div>
-                  <p className="text-gray-600 font-medium">FIO: Abdullayev Abdushukur Xamidxonovich</p>
-                  <p className="text-gray-500 text-sm">Ilmiy darajasi va unvoni: Doktor texnik fanlar, dotsent</p>
-                  <p className="text-gray-500 text-sm">Ish joyi: Direktor o‘rinbosari</p>
-                  <p className="text-gray-500 text-sm">Lavozimi: Direktor o‘rinbosari</p>
-                </div>
-              </div>
-            </div>
-            <div className="border border-gray-300 rounded-lg p-4">
-              <div className="flex items-start">
-                <img
-                  src="https://via.placeholder.com/80" // Default odam rasmi
-                  alt="Hay'at a'zosi"
-                  className="w-20 h-20 rounded-full mr-4"
-                />
-                <div>
-                  <p className="text-gray-600 font-medium">FIO: Turayev Ruhiddin Amirqulovich</p>
-                  <p className="text-gray-500 text-sm">Ilmiy darajasi va unvoni: Doktor texnik fanlar, professor</p>
-                  <p className="text-gray-500 text-sm">Ish joyi: Davlat ilmiy-loyihalashtirish instituti “Uzdavjerloixa”</p>
-                  <p className="text-gray-500 text-sm">Lavozimi: Professor</p>
-                </div>
-              </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">"Agro ilm” jurnali Tahrir hay`ati a`zolari</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+              {tahririyatAI.map((name, index) => (
+                <p key={index} className="text-gray-700">{name}</p>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Maqolalar uchun talablar */}
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white rounded-lg shadow-md p-8 mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Maqolalar uchun talablar</h2>
           <p className="text-gray-600 mb-4">
-            “O‘zbekiston zamini” ilmiy-amaliy va innovatsion jurnalida maqola chop etish uchun qo‘yiladigan
+            “O‘zbekiston qishloq va suv xo‘jaligi” hamda “Agro ilm” jurnallarida maqola chop etish uchun qo‘yiladigan
           </p>
           <h3 className="text-xl font-semibold text-gray-800 mb-2">TALABLAR</h3>
           <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">

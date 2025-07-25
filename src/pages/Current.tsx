@@ -1,79 +1,84 @@
 import React from 'react';
-import { Download } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Eye, FileText, Download } from 'lucide-react';
+
+const qxData = {
+  title: "“O‘zbekiston qishloq va suv xo‘jaligi” jurnali 7-son, 2025",
+  pdfUrl: "/path/to/qishloq_xojaligi_7_2025.pdf",
+  articles: [
+    {
+      id: 101,
+      title: "ZAMONAVIY G'ALLACHILIKDA INNOVATSION TEXNOLOGIYALAR",
+      authors: ["A. Valiev", "B. Sodiqov"],
+      date: "2025-07-15",
+      views: 123,
+      pages: "5-10",
+      abstract: "Maqolada g'alla hosildorligini oshirishda qo'llanilayotgan yangi agrotexnologiyalar tahlil qilingan...",
+    },
+  ]
+};
+
+const aiData = {
+  title: "“AGRO ILM” jurnali 3-son [111], 2025",
+  pdfUrl: "/path/to/agro_ilm_3_2025.pdf",
+  articles: [
+    {
+      id: 201,
+      title: "MEVA-SABZAVOTLARNI QURITISHNING SAMARALI USULLARI",
+      authors: ["F. Qosimova"],
+      date: "2025-06-20",
+      views: 234,
+      pages: "12-18",
+      abstract: "Ushbu maqolada meva-sabzavotlarni saqlash muddatini uzaytirish uchun zamonaviy quritish texnologiyalari ko'rib chiqilgan...",
+    },
+  ]
+};
 
 const Current = () => {
-  const currentIssue = {
-    volume: 10,
-    issue: 2,
-    year: 2024,
-    month: "Mart",
-    articles: [
-      {
-        title: "Kvant kompyuterlari: kelajak texnologiyasi",
-        authors: "A. Rahimov, B. Karimov",
-        pages: "1-15",
-        doi: "10.1234/journal.2024.001"
-      },
-      {
-        title: "Sun'iy intellekt va ta'lim tizimi",
-        authors: "M. Azizova, S. Qodirov",
-        pages: "16-32",
-        doi: "10.1234/journal.2024.002"
-      },
-      {
-        title: "Yangi energiya manbalari tadqiqoti",
-        authors: "D. Usmonov, F. Hakimov",
-        pages: "33-48",
-        doi: "10.1234/journal.2024.003"
-      }
-    ]
+  const { journalType } = useParams<{ journalType: string }>();
+  const navigate = useNavigate();
+
+  const data = journalType === 'ai' ? aiData : qxData;
+
+  const handleViewArticle = (article: any) => {
+    navigate(`/article/${article.id}`, { state: { article } });
   };
-
+  
   return (
-    <div className="py-8">
+    <div className="py-8 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          {/* Issue Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Tom {currentIssue.volume}, Nashr {currentIssue.issue}
-            </h1>
-            <p className="text-lg text-gray-600">
-              {currentIssue.month} {currentIssue.year}
-            </p>
-          </div>
-
-          {/* Download Button */}
-          <div className="flex justify-center mb-8">
-            <button className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">{data.title}</h1>
+        
+        <div className="flex justify-center mb-8">
+            <a href={data.pdfUrl} download className="flex items-center px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
               <Download className="h-5 w-5 mr-2" />
               To'liq nashrni yuklash (PDF)
-            </button>
-          </div>
+            </a>
+        </div>
 
-          {/* Articles List */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Maqolalar</h2>
-            {currentIssue.articles.map((article, index) => (
-              <div key={index} className="border-b border-gray-200 pb-6 last:border-0">
-                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  {article.title}
-                </h3>
-                <div className="text-gray-600 mb-3">
-                  Mualliflar: {article.authors}
-                </div>
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <div>Sahifalar: {article.pages}</div>
-                  <div>DOI: {article.doi}</div>
-                </div>
-                <div className="mt-4">
-                  <button className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
-                    Maqolani o'qish
-                  </button>
-                </div>
+        <div className="space-y-6">
+          {data.articles.map((article) => (
+            <div key={article.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <h2 className="text-xl font-semibold text-blue-800 mb-2 hover:text-blue-600 cursor-pointer" onClick={() => handleViewArticle(article)}>
+                {article.title}
+              </h2>
+              <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4 gap-x-4 gap-y-1">
+                <span>{article.authors.join(" | ")}</span>
+                <span className="flex items-center"><FileText className="h-4 w-4 mr-1" /> {article.pages}</span>
+                <span className="flex items-center"><Eye className="h-4 w-4 mr-1" /> {article.views}</span>
+                <span>{new Date(article.date).toLocaleDateString('uz-UZ')}</span>
               </div>
-            ))}
-          </div>
+              <p className="text-gray-600 mb-4">
+                <span className="font-semibold text-gray-800">Аннотация:</span> {article.abstract}
+              </p>
+              <button
+                onClick={() => handleViewArticle(article)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Ko'rish
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

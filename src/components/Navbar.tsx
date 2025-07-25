@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, X, BookOpen } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '../../logo.png';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,14 +9,17 @@ const Navbar = () => {
 
   const menuItems = [
     { title: "Bosh sahifa", href: "/" },
-    { title: "Maqolalar", href: "/articles" },
     { title: "Jurnal haqida", href: "/about" },
-    { title: "Joriy nashr", href: "/current" },
+    { title: "Joriy nashr (QX)", href: "/current/qx" },
+    { title: "Joriy nashr (AI)", href: "/current/ai" },
     { title: "Arxiv", href: "/archive" },
     { title: "Bog'lanish", href: "/contact" },
   ];
 
   const isActive = (path: string) => {
+    if (path.startsWith('/current')) {
+      return location.pathname.startsWith('/current');
+    }
     return location.pathname === path;
   };
 
@@ -25,12 +29,10 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-semibold text-gray-800">Journal</span>
+              <img src={logo} alt="Logo" className="h-8 w-8 object-contain" />
+              <span className="ml-2 text-xl font-semibold text-gray-800">Qishloq Xo'jaligi</span>
             </Link>
           </div>
-          
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {menuItems.map((item) => (
               <Link
@@ -46,8 +48,6 @@ const Navbar = () => {
               </Link>
             ))}
           </div>
-
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -58,8 +58,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
