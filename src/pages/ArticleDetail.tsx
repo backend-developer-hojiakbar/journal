@@ -1,44 +1,71 @@
-// src/components/ArticleDetail.tsx
-import React from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import apiClient from '../api/axiosConfig';
 
 const ArticleDetail = () => {
-  const { id } = useParams();
-  const location = useLocation();
-  const article = location.state?.article; // Maqola ma'lumotlari state orqali uzatiladi
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [article, setArticle] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  if (!article) {
-    return <div className="py-8 text-center text-gray-600">Мақола топилмади</div>;
-  }
+    useEffect(() => {
+        const fetchArticle = async () => {
+            try {
+                const response = await apiClient.get(`/articles/${id}/`);
+                setArticle(response.data);
+            } catch (error) {
+                console.error("Failed to fetch article", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        if (id) {
+            fetchArticle();
+        }
+    }, [id]);
 
-  return (
-    <div className="py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">{article.title}</h1>
-        <div className="flex items-center text-sm text-gray-500 mb-4">
-          <span>{article.authors.join(" | ")}</span>
-          <span className="mx-2">|</span>
-          <span>{new Date(article.date).toLocaleDateString('uz-UZ', { year: 'numeric', month: 'short', day: 'numeric' })} {new Date(article.date).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
-          <span className="mx-2">|</span>
-          <span>Кўришлар: {article.views}</span>
-          <span className="mx-2">|</span>
-          <span>Саҳифалар: {article.pages}</span>
+    if (loading) return <div className="py-8 text-center text-gray-600">Maqola yuklanmoqda...</div>;
+    if (!article) return <div className="py-8 text-center text-gray-600">Maqola topilmadi.</div>;
+
+    const mainTranslation = article.translations.find(t => t.language === 'uz') || article.translations[0];
+
+    return (
+        <div className="py-8 bg-white">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-6">{mainTranslation?.title}</h1>
+                <div className="prose max-w-none">
+                    <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+                        <p><strong>Mualliflar:</strong> {article.authors.map(a => `${a.last_name} ${a.first_name}`).join(", ")}</p>
+                        <p><strong>DOI:</strong> {article.doi}</p>
+                        <p><strong>Sahifalar:</strong> {article.pages}</p>
+                        <p><strong>Ko'rishlar:</strong> {article.views}</p>
+                    </div>
+
+                    <h2 className="text-xl font-semibold">Annotatsiya</h2>
+                    <p>{mainTranslation?.abstract}</p>
+
+                    {article.keywords.length > 0 && (
+                        <>
+                            <h2 className="text-xl font-semibold mt-6">Kalit so'zlar</h2>
+                            <div className="flex flex-wrap gap-2">
+                                {article.keywords.map(kw => <span key={kw.name} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">{kw.name}</span>)}
+                            </div>
+                        </>
+                    )}
+                    
+                    {article.references && (
+                         <>
+                            <h2 className="text-xl font-semibold mt-6">Foydalanilgan adabiyotlar</h2>
+                            <div className="text-sm whitespace-pre-line">{article.references}</div>
+                        </>
+                    )}
+                </div>
+                <button onClick={() => navigate(-1)} className="mt-8 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                    Orqaga
+                </button>
+            </div>
         </div>
-        <p className="text-gray-600 mb-6">
-          <span className="font-semibold text-blue-600">Аннотация:</span> {article.abstract}
-        </p>
-        <div className="text-sm text-gray-500">
-          <p><span className="font-semibold">DOI:</span> {article.doi}</p>
-        </div>
-        <button
-          onClick={() => window.history.back()}
-          className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Орқага қайтиш
-        </button>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ArticleDetail;

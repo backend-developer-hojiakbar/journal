@@ -1,88 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import apiClient from '../api/axiosConfig';
 import { Eye, FileText, Download } from 'lucide-react';
 
-const qxData = {
-  title: "“O‘zbekiston qishloq va suv xo‘jaligi” jurnali 7-son, 2025",
-  pdfUrl: "/path/to/qishloq_xojaligi_7_2025.pdf",
-  articles: [
-    {
-      id: 101,
-      title: "ZAMONAVIY G'ALLACHILIKDA INNOVATSION TEXNOLOGIYALAR",
-      authors: ["A. Valiev", "B. Sodiqov"],
-      date: "2025-07-15",
-      views: 123,
-      pages: "5-10",
-      abstract: "Maqolada g'alla hosildorligini oshirishda qo'llanilayotgan yangi agrotexnologiyalar tahlil qilingan...",
-    },
-  ]
-};
-
-const aiData = {
-  title: "“AGRO ILM” jurnali 3-son [111], 2025",
-  pdfUrl: "/path/to/agro_ilm_3_2025.pdf",
-  articles: [
-    {
-      id: 201,
-      title: "MEVA-SABZAVOTLARNI QURITISHNING SAMARALI USULLARI",
-      authors: ["F. Qosimova"],
-      date: "2025-06-20",
-      views: 234,
-      pages: "12-18",
-      abstract: "Ushbu maqolada meva-sabzavotlarni saqlash muddatini uzaytirish uchun zamonaviy quritish texnologiyalari ko'rib chiqilgan...",
-    },
-  ]
-};
-
 const Current = () => {
-  const { journalType } = useParams<{ journalType: string }>();
-  const navigate = useNavigate();
+    const { journalType } = useParams<{ journalType: string }>();
+    const navigate = useNavigate();
+    const [issue, setIssue] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  const data = journalType === 'ai' ? aiData : qxData;
+    useEffect(() => {
+        const fetchCurrentIssue = async () => {
+            setLoading(true);
+            try {
+                const response = await apiClient.get(`/issues/?journal=${journalType}¤t=true`);
+                if (response.data && response.data.length > 0) {
+                    setIssue(response.data[0]);
+                } else {
+                    setIssue(null);
+                }
+            } catch (error) {
+                console.error("Failed to fetch current issue", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCurrentIssue();
+    }, [journalType]);
 
-  const handleViewArticle = (article: any) => {
-    navigate(`/article/${article.id}`, { state: { article } });
-  };
-  
-  return (
-    <div className="py-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">{data.title}</h1>
-        
-        <div className="flex justify-center mb-8">
-            <a href={data.pdfUrl} download className="flex items-center px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-              <Download className="h-5 w-5 mr-2" />
-              To'liq nashrni yuklash (PDF)
-            </a>
-        </div>
+    const handleViewArticle = (articleId: number) => {
+        navigate(`/article/${articleId}`);
+    };
 
-        <div className="space-y-6">
-          {data.articles.map((article) => (
-            <div key={article.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-              <h2 className="text-xl font-semibold text-blue-800 mb-2 hover:text-blue-600 cursor-pointer" onClick={() => handleViewArticle(article)}>
-                {article.title}
-              </h2>
-              <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4 gap-x-4 gap-y-1">
-                <span>{article.authors.join(" | ")}</span>
-                <span className="flex items-center"><FileText className="h-4 w-4 mr-1" /> {article.pages}</span>
-                <span className="flex items-center"><Eye className="h-4 w-4 mr-1" /> {article.views}</span>
-                <span>{new Date(article.date).toLocaleDateString('uz-UZ')}</span>
-              </div>
-              <p className="text-gray-600 mb-4">
-                <span className="font-semibold text-gray-800">Аннотация:</span> {article.abstract}
-              </p>
-              <button
-                onClick={() => handleViewArticle(article)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Ko'rish
-              </button>
+    if (loading) return <p className="text-center py-10">Joriy nashr yuklanmoqda...</p>;
+    if (!issue) return <p className="text-center py-10">Bu jurnal uchun joriy nashr topilmadi.</p>;
+
+    return (
+        <div className="py-8 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">{issue.journal_name} - {issue.title}</h1>
+                <div className="flex justify-center mb-8">
+                    <a href={issue.pdf_file} download className="flex items-center px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                        <Download className="h-5 w-5 mr-2" />
+                        To'liq nashrni yuklash (PDF)
+                    </a>
+                </div>
+                <div className="space-y-6">
+                    {issue.articles.map((article: any) => (
+                        <div key={article.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                            <h2 className="text-xl font-semibold text-blue-800 mb-2 hover:text-blue-600 cursor-pointer" onClick={() => handleViewArticle(article.id)}>
+                                {article.translations[0]?.title || "Nomsiz maqola"}
+                            </h2>
+                            <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4 gap-x-4 gap-y-1">
+                                <span>{article.authors.map(a => `${a.last_name} ${a.first_name.charAt(0)}.`).join(", ")}</span>
+                                <span className="flex items-center"><FileText className="h-4 w-4 mr-1" /> {article.pages}</span>
+                                <span className="flex items-center"><Eye className="h-4 w-4 mr-1" /> {article.views}</span>
+                            </div>
+                            <p className="text-gray-600 mb-4">
+                                <span className="font-semibold text-gray-800">Annotatsiya:</span> {article.translations[0]?.abstract}
+                            </p>
+                            <button onClick={() => handleViewArticle(article.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                                Ko'rish
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
-          ))}
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Current;
