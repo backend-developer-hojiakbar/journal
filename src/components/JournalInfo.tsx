@@ -17,6 +17,7 @@ const JournalInfo = () => {
     }, []);
 
     const fanlar = [
+        { code: "03.00.00", subject: "Biologiya fanlari" },
         { code: "05.00.00", subject: "Texnika fanlari" },
         { code: "06.00.00", subject: "Qishloq xo'jaligi fanlari" },
         { code: "08.00.00", subject: "Iqtisodiyot fanlari" },

@@ -32,7 +32,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img src={logo} alt="Logo" className="h-8 w-8 object-contain" />
-              <span className="ml-2 text-xl font-semibold text-gray-800">Qishloq Xo'jaligi</span>
+              <span className="ml-2 text-xl font-semibold text-gray-800">“O'zbekiston qishloq va suv xo‘jaligi”</span>
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-2">

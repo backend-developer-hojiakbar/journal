@@ -6,14 +6,15 @@ import { Eye, FileText, Download } from 'lucide-react';
 const Current = () => {
     const { journalType } = useParams<{ journalType: string }>();
     const navigate = useNavigate();
-    const [issue, setIssue] = useState(null);
+    const [issue, setIssue] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchCurrentIssue = async () => {
             setLoading(true);
             try {
-                const response = await apiClient.get(`/issues/?journal=${journalType}¤t=true`);
+                // XATOLIK TUZATILDI: ¤t -> current
+                const response = await apiClient.get(`/issues/?journal=${journalType}&current=true`);
                 if (response.data && response.data.length > 0) {
                     setIssue(response.data[0]);
                 } else {
@@ -36,6 +37,7 @@ const Current = () => {
     if (!issue) return <p className="text-center py-10">Bu jurnal uchun joriy nashr topilmadi.</p>;
 
     return (
+        // ... qolgan JSX kod o'zgarishsiz qoladi ...
         <div className="py-8 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">{issue.journal_name} - {issue.title}</h1>
@@ -46,24 +48,28 @@ const Current = () => {
                     </a>
                 </div>
                 <div className="space-y-6">
-                    {issue.articles.map((article: any) => (
+                    {issue.articles && issue.articles.length > 0 ? issue.articles.map((article: any) => (
                         <div key={article.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                             <h2 className="text-xl font-semibold text-blue-800 mb-2 hover:text-blue-600 cursor-pointer" onClick={() => handleViewArticle(article.id)}>
-                                {article.translations[0]?.title || "Nomsiz maqola"}
+                                {article.translations?.[0]?.title || "Nomsiz maqola"}
                             </h2>
                             <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4 gap-x-4 gap-y-1">
-                                <span>{article.authors.map(a => `${a.last_name} ${a.first_name.charAt(0)}.`).join(", ")}</span>
-                                <span className="flex items-center"><FileText className="h-4 w-4 mr-1" /> {article.pages}</span>
-                                <span className="flex items-center"><Eye className="h-4 w-4 mr-1" /> {article.views}</span>
+                                <span>{article.authors ? article.authors.map(a => `${a.last_name} ${a.first_name.charAt(0)}.`).join(", ") : "Noma'lum muallif"}</span>
+                                <span className="flex items-center"><FileText className="h-4 w-4 mr-1" /> {article.pages || "N/A"}</span>
+                                <span className="flex items-center"><Eye className="h-4 w-4 mr-1" /> {article.views || 0}</span>
                             </div>
                             <p className="text-gray-600 mb-4">
-                                <span className="font-semibold text-gray-800">Annotatsiya:</span> {article.translations[0]?.abstract}
+                                <span className="font-semibold text-gray-800">Annotatsiya:</span> {article.translations?.[0]?.abstract || "Annotatsiya mavjud emas"}
                             </p>
                             <button onClick={() => handleViewArticle(article.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
                                 Ko'rish
                             </button>
                         </div>
-                    ))}
+                    )) : (
+                        <div className="text-center py-10">
+                            <p className="text-gray-600">Bu nashrda maqolalar mavjud emas.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
