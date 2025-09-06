@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Journal Management API - Debug Info</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        .method {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .get { background: #28a745; color: white; }
+        .post { background: #007bff; color: white; }
+        .put { background: #ffc107; color: black; }
+        .delete { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Journal Management API - Debug Information</h1>
+        <p>This page is only available in DEBUG mode.</p>
+        
+        <h2>Available API Endpoints</h2>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/</strong> - API Root (List all endpoints)
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/health/</strong> - Health Check
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/issues/</strong> - Issues Management
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/issues/recent-by-years/</strong> - Recent Issues Grouped by Year
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/issues/years-summary/</strong> - Issues Years Summary
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/issues/by-year/{year}/</strong> - Issues by Specific Year
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/articles/</strong> - Articles Management
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/authors/</strong> - Authors Management
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/keywords/</strong> - Keywords Management
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/news/</strong> - News Management
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/journals/</strong> - Journals Management
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/contact/</strong> - Contact Messages
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="method post">POST</span>
+            <strong>/api/board-members/</strong> - Editorial Board Members
+        </div>
+        
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="/api/docs/">API Documentation (DRF)</a></li>
+            <li><a href="/api/redoc/">ReDoc Documentation</a></li>
+            <li><a href="/api/schema/">OpenAPI Schema (JSON)</a></li>
+        </ul>
+        
+        <h2>Quick Tests</h2>
+        <ul>
+            <li><a href="/api/health/" target="_blank">Test Health Check</a></li>
+            <li><a href="/api/issues/recent-by-years/" target="_blank">Test Recent Issues by Years</a></li>
+            <li><a href="/api/issues/years-summary/" target="_blank">Test Years Summary</a></li>
+        </ul>
+    </div>
+</body>
+</html>

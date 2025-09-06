@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Recent Issues API</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .year-group {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .issue-item {
+            background: white;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 3px;
+            border-left: 3px solid #28a745;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Recent Issues API Endpoints</h1>
+        <p>This page allows you to test the new recent issues API endpoints.</p>
+        
+        <div>
+            <h2>Test Endpoints</h2>
+            <button class="test-button" onclick="testRecentByYears()">Test Recent Issues by Years</button>
+            <button class="test-button" onclick="testYearsSummary()">Test Years Summary</button>
+            <button class="test-button" onclick="testSpecificYear()">Test Specific Year (2024)</button>
+            <button class="test-button" onclick="testHealthCheck()">Test Health Check</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function makeRequest(url, title) {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result';
+            
+            try {
+                resultDiv.innerHTML = `<strong>${title}</strong>\nLoading...`;
+                resultsDiv.appendChild(resultDiv);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `<strong>${title}</strong>\nStatus: ${response.status}\nURL: ${url}\n\n${JSON.stringify(data, null, 2)}`;
+                
+                if (!response.ok) {
+                    resultDiv.classList.add('error');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>${title}</strong>\nError: ${error.message}`;
+                resultDiv.classList.add('error');
+            }
+        }
+        
+        function testRecentByYears() {
+            makeRequest('/api/issues/recent-by-years/', 'Recent Issues by Years');
+        }
+        
+        function testYearsSummary() {
+            makeRequest('/api/issues/years-summary/', 'Years Summary');
+        }
+        
+        function testSpecificYear() {
+            makeRequest('/api/issues/by-year/2024/', 'Issues for Year 2024');
+        }
+        
+        function testHealthCheck() {
+            makeRequest('/api/health/', 'Health Check');
+        }
+        
+        // Auto-run tests on page load
+        window.onload = function() {
+            testHealthCheck();
+        };
+    </script>
+</body>
+</html>

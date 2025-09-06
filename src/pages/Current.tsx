@@ -30,6 +30,7 @@ const Current = () => {
     }, [journalType]);
 
     const handleViewArticle = (articleId: number) => {
+        console.log('Navigating to article with ID:', articleId);
         navigate(`/article/${articleId}`);
     };
 

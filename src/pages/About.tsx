@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api/axiosConfig';
+import ArticleDebug from '../components/ArticleDebug';
 
 const About = () => {
   const [qxBoard, setQxBoard] = useState([]);
   const [aiBoard, setAiBoard] = useState([]);
 
   useEffect(() => {
-    const fetchBoard = async (journalShortName, setter) => {
+    const fetchBoard = async (journalShortName: string, setter: (data: any[]) => void) => {
       try {
         const response = await apiClient.get(`/board-members/?journal=${journalShortName}`);
         setter(response.data);
@@ -49,6 +50,12 @@ const About = () => {
                 <p key={index} className="text-gray-700">{member.full_name}</p>
               ))}
             </div>
+          </div>
+          
+          {/* Temporary Debug Tool */}
+          <div className="mt-12 border-t pt-8">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Debug Tool (Vaqtincha)</h2>
+            <ArticleDebug />
           </div>
         </div>
       </div>

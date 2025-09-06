@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react';
 import apiClient from '../api/axiosConfig';
 
 const JournalInfo = () => {
-    const [recentIssues, setRecentIssues] = useState([]);
+    const [latestYear, setLatestYear] = useState<number | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchRecentIssues = async () => {
+        const fetchLatestYear = async () => {
             try {
-                const response = await apiClient.get('/recent-issues/');
-                setRecentIssues(response.data);
+                const response = await apiClient.get('/issues/latest-year/');
+                if (response.data.success) {
+                    setLatestYear(response.data.year);
+                }
             } catch (error) {
-                console.error("Failed to fetch recent issues", error);
+                console.error("Failed to fetch latest year", error);
+            } finally {
+                setLoading(false);
             }
         };
-        fetchRecentIssues();
+        fetchLatestYear();
     }, []);
 
     const fanlar = [
@@ -54,15 +59,29 @@ const JournalInfo = () => {
                     </div>
                 </div>
 
-                {recentIssues.length > 0 && (
+                {!loading && latestYear && (
                     <div className="mt-12">
-                        <h3 className="text-xl text-center font-semibold text-gray-900">So'nggi nashrlar:</h3>
-                        <div className="mt-4 flex flex-wrap justify-center gap-4">
-                            {recentIssues.map((issue: any, index: number) => (
-                                <a key={index} href={`/archive/#issue-${issue.link_to_issue}`} className="px-6 py-3 border border-green-600 rounded-md text-base font-medium text-green-700 hover:bg-green-50 transition-all">
-                                    {issue.title}
-                                </a>
-                            ))}
+                        <h3 className="text-2xl text-center font-semibold text-gray-900 mb-6">So'nggi nashrlar:</h3>
+                        <div className="flex justify-center">
+                            <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                                <div className="text-3xl font-bold text-green-800 mb-2">{latestYear}</div>
+                                <div className="text-green-600">Eng so'nggi nashr yili</div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                
+                {loading && (
+                    <div className="mt-12 text-center py-8">
+                        <p className="text-gray-600">So'nggi nashr yili yuklanmoqda...</p>
+                    </div>
+                )}
+                
+                {!loading && !latestYear && (
+                    <div className="mt-12 text-center py-8">
+                        <div className="bg-gray-100 rounded-lg p-6">
+                            <h4 className="text-lg font-semibold text-gray-700 mb-2">So'nggi nashrlar</h4>
+                            <p className="text-gray-600">Hozircha nashrlar mavjud emas.</p>
                         </div>
                     </div>
                 )}

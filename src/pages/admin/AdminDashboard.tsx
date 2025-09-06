@@ -5,11 +5,11 @@ const AdminDashboard = () => {
   const navItems = [
     { name: "Xabarlar", path: "/admin/messages" },
     { name: "Yangiliklar", path: "/admin/news" },
-    { name: "Jurnallar", path: "/admin/journals" },
+    // { name: "Jurnallar", path: "/admin/journals" }, // Hidden from admin
     { name: "Nashrlar", path: "/admin/issues" },
     { name: "Maqolalar", path: "/admin/articles" },
-    { name: "Mualliflar", path: "/admin/authors" },
-    { name: "Kalit so'zlar", path: "/admin/keywords" },
+    // { name: "Mualliflar", path: "/admin/authors" }, // Integrated into article management
+    // { name: "Kalit so'zlar", path: "/admin/keywords" }, // Integrated into article management
     { name: "Tahririyat", path: "/admin/board" },
   ];
 

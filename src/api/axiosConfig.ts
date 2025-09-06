@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-const apiClient = axios.create({
+const apiClient: AxiosInstance = axios.create({
   baseURL: 'https://vebsayt.pythonanywhere.com/api/',
   headers: {
     'Content-Type': 'application/json',
@@ -8,9 +8,9 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(
-  (config) => {
+  (config: AxiosRequestConfig) => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && config.headers) {
       config.headers.Authorization = `Token ${token}`;
     }
     return config;

@@ -15,8 +15,8 @@ import ManageNews from './pages/admin/ManageNews';
 import ManageIssues from './pages/admin/ManageIssues';
 import ManageArticles from './pages/admin/ManageArticles';
 import ManageBoard from './pages/admin/ManageBoard';
-import ManageAuthors from './pages/admin/ManageAuthors';
-import ManageKeywords from './pages/admin/ManageKeywords';
+// import ManageAuthors from './pages/admin/ManageAuthors'; // Integrated into article management
+// import ManageKeywords from './pages/admin/ManageKeywords'; // Integrated into article management
 import ManageJournals from './pages/admin/ManageJournals';
 import ManageMessages from './pages/admin/ManageMessages';
 
@@ -47,8 +47,8 @@ function App() {
               <Route path="journals" element={<ManageJournals />} />
               <Route path="issues" element={<ManageIssues />} />
               <Route path="articles" element={<ManageArticles />} />
-              <Route path="authors" element={<ManageAuthors />} />
-              <Route path="keywords" element={<ManageKeywords />} />
+              {/* <Route path="authors" element={<ManageAuthors />} /> */} {/* Integrated into article management */}
+              {/* <Route path="keywords" element={<ManageKeywords />} /> */} {/* Integrated into article management */}
               <Route path="board" element={<ManageBoard />} />
             </Route>
           </Routes>
