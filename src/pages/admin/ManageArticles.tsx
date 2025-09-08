@@ -258,7 +258,7 @@ const ManageArticles = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal} title={editingItem ? "Maqolani Tahrirlash" : "Yangi Maqola Qo'shish"}>
         <form onSubmit={submitArticle} className="space-y-6">
           <div className="flex gap-2 border-b pb-2">
-            {[1,2,3,4].map(n=>(
+            {[1,2,3].map(n=>(
               <button key={n} type="button" onClick={()=>setStep(n)}
                 className={`px-3 py-1 rounded-md text-sm ${step===n?'bg-blue-600 text-white':'bg-gray-200 hover:bg-gray-300'}`}>Bosqich {n}</button>
             ))}
@@ -309,17 +309,45 @@ const ManageArticles = () => {
 
           {step===3 && (
             <div className="space-y-6 animate-fade-in">
-              <h3 className="text-lg font-semibold">Annotatsiyalar, Mualliflar va Kalit so'zlar (3 tilda)</h3>
+              <h3 className="text-lg font-semibold">Annotatsiyalar, Mualliflar va Kalit so'zlar</h3>
               
-              {/* Annotations for all 3 languages */}
+              {/* Annotations for all 3 languages with copy-paste functionality */}
               <div className="space-y-4">
-                <h4 className="font-medium text-gray-700">Annotatsiyalar:</h4>
+                <div className="flex justify-between items-center">
+                  <h4 className="font-medium text-gray-700">Annotatsiyalar (3 tilda):</h4>
+                  <div className="flex gap-2">
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        const text = formData.translations[0].abstract;
+                        if (text.trim()) {
+                          setFormData((prev: any) => ({
+                            ...prev,
+                            translations: prev.translations.map((tr: any, idx: number) => 
+                              idx > 0 ? {...tr, abstract: text} : tr
+                            )
+                          }));
+                        }
+                      }}
+                      className="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+                    >
+                      O'zbekchadan kopya qilish
+                    </button>
+                  </div>
+                </div>
                 {formData.translations.map((tr:Translation, idx:number)=>(
                   <div key={idx} className="border rounded p-3 space-y-2 bg-gray-50">
                     <label className="font-medium text-sm text-blue-600">
                       {tr.language === 'uz' ? "O'zbek tili" : tr.language === 'ru' ? 'Rus tili' : 'Ingliz tili'}
                     </label>
-                    <textarea value={tr.abstract} onChange={(e)=>handleTranslationChange(idx,'abstract',e.target.value)} rows={4} required className="w-full border rounded px-3 py-2" placeholder={`Annotatsiya (${tr.language === 'uz' ? "O'zbek" : tr.language === 'ru' ? 'Rus' : 'Ingliz'})`}/>
+                    <textarea 
+                      value={tr.abstract} 
+                      onChange={(e)=>handleTranslationChange(idx,'abstract',e.target.value)} 
+                      rows={4} 
+                      required 
+                      className="w-full border rounded px-3 py-2" 
+                      placeholder={`Annotatsiya (${tr.language === 'uz' ? "O'zbek" : tr.language === 'ru' ? 'Rus' : 'Ingliz'})`}
+                    />
                   </div>
                 ))}
               </div>
@@ -416,12 +444,12 @@ const ManageArticles = () => {
                 </div>
               </div>
 
-              {/* Keywords Section with Add Button */}
+              {/* Keywords Section with Bulk Input */}
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center mb-3">
                   <h4 className="font-medium text-gray-700">Kalit so'zlar ({formData.keyword_ids.length} tanlangan):</h4>
                   <button type="button" onClick={() => setShowNewKeywordForm(!showNewKeywordForm)} className="flex items-center px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                    <Plus size={16} className="mr-1" /> Yangi kalit so'z qo'shish
+                    <Plus size={16} className="mr-1" /> Kalit so'zlar qo'shish
                   </button>
                 </div>
                 
@@ -445,26 +473,72 @@ const ManageArticles = () => {
                   </div>
                 )}
                 
-                {/* New Keyword Form */}
+                {/* New Keywords Form with Bulk Input */}
                 {showNewKeywordForm && (
                   <div className="mb-4 p-4 border-2 border-blue-300 rounded bg-blue-50">
-                    <h5 className="font-medium text-blue-800 mb-3">Yangi kalit so'z qo'shish:</h5>
-                    <div className="flex gap-3">
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium mb-1">Kalit so'z nomi *</label>
-                        <input 
-                          type="text" 
-                          placeholder="Yangi kalit so'z kiriting" 
-                          value={newKeyword} 
-                          onChange={(e) => setNewKeyword(e.target.value)} 
-                          className="w-full border rounded px-3 py-2 text-sm" 
-                          onKeyPress={(e) => e.key === 'Enter' && addNewKeyword()}
-                        />
-                      </div>
+                    <h5 className="font-medium text-blue-800 mb-3">Kalit so'zlar qo'shish:</h5>
+                    
+                    {/* Bulk Keywords Input */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium mb-2">Ko'p kalit so'zlarni birdan qo'shish (vergul bilan ajrating):</label>
+                      <textarea 
+                        placeholder="Masalan: qishloq xo'jaligi, ekin, sug'orish, tuproq, texnologiya"
+                        value={newKeyword}
+                        onChange={(e) => setNewKeyword(e.target.value)}
+                        rows={3}
+                        className="w-full border rounded px-3 py-2 text-sm"
+                      />
+                      <p className="text-xs text-blue-600 mt-1">💡 Maslahat: Bir nechta kalit so'zni vergul (,) bilan ajratib yozing</p>
                     </div>
-                    <div className="flex gap-2 mt-3">
-                      <button type="button" onClick={addNewKeyword} className="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                        <Plus size={16} className="inline mr-1" /> Kalit so'z qo'shish
+                    
+                    <div className="flex gap-2">
+                      <button 
+                        type="button" 
+                        onClick={async () => {
+                          if (!newKeyword.trim()) {
+                            alert('Kalit so\'zlarni kiriting!');
+                            return;
+                          }
+                          
+                          const keywordList = newKeyword.split(',').map(k => k.trim()).filter(k => k.length > 0);
+                          if (keywordList.length === 0) {
+                            alert('Hech qanday kalit so\'z topilmadi!');
+                            return;
+                          }
+                          
+                          try {
+                            const newKeywordIds: number[] = [];
+                            for (const keywordName of keywordList) {
+                              // Check if keyword already exists
+                              const existing = keywords.find(k => k.name.toLowerCase() === keywordName.toLowerCase());
+                              if (existing) {
+                                newKeywordIds.push(existing.id);
+                              } else {
+                                // Create new keyword
+                                const response = await apiClient.post('/keywords/', { name: keywordName });
+                                const createdKeyword = response.data;
+                                setKeywords(prev => [...prev, createdKeyword]);
+                                newKeywordIds.push(createdKeyword.id);
+                              }
+                            }
+                            
+                            // Add all keywords to selected list
+                            setFormData((prev: any) => ({
+                              ...prev,
+                              keyword_ids: [...new Set([...prev.keyword_ids, ...newKeywordIds])]
+                            }));
+                            
+                            setNewKeyword('');
+                            setShowNewKeywordForm(false);
+                            alert(`✅ ${keywordList.length} ta kalit so'z muvaffaqiyatli qo'shildi!`);
+                          } catch (error) {
+                            console.error('Error creating keywords:', error);
+                            alert('❌ Kalit so\'zlarni qo\'shishda xatolik yuz berdi!');
+                          }
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                      >
+                        <Plus size={16} className="inline mr-1" /> Kalit so'zlarni qo'shish
                       </button>
                       <button type="button" onClick={() => setShowNewKeywordForm(false)} className="px-4 py-2 bg-gray-300 text-gray-700 rounded text-sm hover:bg-gray-400">
                         Bekor qilish
@@ -497,77 +571,40 @@ const ManageArticles = () => {
                     ) : (
                       <div className="w-full text-center py-4 text-gray-500">
                         <p className="text-sm">Hozircha kalit so'zlar yo'q.</p>
-                        <p className="text-xs mt-1">Yuqoridagi "Yangi kalit so'z qo'shish" tugmasini bosing.</p>
+                        <p className="text-xs mt-1">Yuqoridagi "Kalit so'zlar qo'shish" tugmasini bosing.</p>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
+              
+              {/* References */}
+              <div className="border-t pt-4">
+                <h4 className="font-medium text-gray-700 mb-3">Foydalanilgan adabiyotlar:</h4>
+                <textarea 
+                  name="references" 
+                  value={formData.references} 
+                  onChange={handleBasicChange} 
+                  rows={6} 
+                  className="w-full border rounded px-3 py-2" 
+                  placeholder="Adabiyotlar ro'yxatini kiriting...
+
+1. Author A. Title of article. Journal Name. 2023; 15(2): 123-130.
+2. Author B. Book title. Publisher; 2022.
+3. ..."
+                />
+              </div>
             </div>
           )}
 
-          {step===4 && (
-            <div className="space-y-4 animate-fade-in">
-              <h3 className="text-lg font-semibold">Qo'shimcha ma'lumotlar</h3>
-              
-              {/* Selected Authors Summary */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Tanlangan mualliflar ({formData.author_ids.length}):</label>
-                <div className="flex flex-wrap gap-2 p-2 border rounded bg-gray-50 min-h-[40px]">
-                  {formData.author_ids.length > 0 ? (
-                    formData.author_ids.map((id: number) => {
-                      const author = authors.find(a => a.id === id);
-                      return author ? (
-                        <span key={id} className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                          {author.last_name} {author.first_name}
-                          <button type="button" onClick={() => toggleAuthor(id)} className="ml-1 text-green-600 hover:text-green-800">
-                            <X size={14} />
-                          </button>
-                        </span>
-                      ) : null;
-                    })
-                  ) : (
-                    <span className="text-gray-500 text-sm">Hech qanday muallif tanlanmagan</span>
-                  )}
-                </div>
-              </div>
-              
-              {/* Selected Keywords Summary */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Tanlangan kalit so'zlar ({formData.keyword_ids.length}):</label>
-                <div className="flex flex-wrap gap-2 p-2 border rounded bg-gray-50 min-h-[40px]">
-                  {formData.keyword_ids.length > 0 ? (
-                    formData.keyword_ids.map((id: number) => {
-                      const keyword = keywords.find(k => k.id === id);
-                      return keyword ? (
-                        <span key={id} className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                          {keyword.name}
-                          <button type="button" onClick={() => toggleKeyword(id)} className="ml-1 text-blue-600 hover:text-blue-800">
-                            <X size={14} />
-                          </button>
-                        </span>
-                      ) : null;
-                    })
-                  ) : (
-                    <span className="text-gray-500 text-sm">Hech qanday kalit so'z tanlanmagan</span>
-                  )}
-                </div>
-              </div>
-              
-              {/* References */}
-              <div>
-                <label className="block text-sm font-medium mb-1">Foydalanilgan adabiyotlar</label>
-                <textarea name="references" value={formData.references} onChange={handleBasicChange} rows={8} className="w-full border rounded px-3 py-2" placeholder="Adabiyotlar ro'yxatini kiriting..."/>
-              </div>
-            </div>
-          )}
+
 
           <div className="flex justify-between items-center pt-4 border-t">
             <button type="button" disabled={step===1} onClick={()=>setStep(step-1)} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300 transition-colors">Oldingi</button>
             <div className="text-sm text-gray-500">
-              Bosqich {step} / 4
+              Bosqich {step} / 3
             </div>
-            {step<4 ? (
+            {step<3 ? (
               <button type="button" onClick={()=>setStep(step+1)} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Keyingi</button>
             ) : (
               <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center">

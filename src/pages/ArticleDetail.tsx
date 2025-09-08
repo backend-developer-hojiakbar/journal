@@ -30,6 +30,7 @@ interface Article {
     pages?: string;
     views?: number;
     references?: string;
+    article_file?: string;
 }
 
 const ArticleDetail = () => {
@@ -122,6 +123,10 @@ const ArticleDetail = () => {
     }
 
     const mainTranslation = article.translations?.find(t => t.language === 'uz') || article.translations?.[0];
+    const getTranslationByLanguage = (lang: string) => article.translations?.find(t => t.language === lang);
+    const uzTranslation = getTranslationByLanguage('uz');
+    const ruTranslation = getTranslationByLanguage('ru');
+    const enTranslation = getTranslationByLanguage('en');
 
     return (
         <div className="py-8 bg-white">
@@ -129,53 +134,150 @@ const ArticleDetail = () => {
                 <h1 className="text-3xl font-bold text-gray-900 mb-6">
                     {mainTranslation?.title || 'Nomsiz maqola'}
                 </h1>
-                <div className="prose max-w-none">
-                    <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
-                        <p><strong>Mualliflar:</strong> {article.authors?.length > 0 ? article.authors.map(a => `${a.last_name} ${a.first_name}`).join(", ") : 'Noma\'lum muallif'}</p>
-                        <p><strong>DOI:</strong> {article.doi || 'Mavjud emas'}</p>
-                        <p><strong>Sahifalar:</strong> {article.pages || 'Mavjud emas'}</p>
-                        <p><strong>Ko'rishlar:</strong> {article.views || 0}</p>
+                
+                {/* Article Metadata */}
+                <div className="mb-8 p-6 bg-gray-50 rounded-lg border">
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p className="mb-2"><strong>Mualliflar:</strong></p>
+                            {article.authors && article.authors.length > 0 ? (
+                                <ul className="ml-4 space-y-1">
+                                    {article.authors.map((author, index) => (
+                                        <li key={author.id || index} className="text-gray-700">
+                                            <span className="font-medium">{author.last_name} {author.first_name}</span>
+                                            {author.organization && (
+                                                <span className="text-sm text-gray-600 ml-2">({author.organization})</span>
+                                            )}
+                                            {author.position && (
+                                                <span className="text-sm text-gray-500 block ml-2">{author.position}</span>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500 ml-4">Noma'lum muallif</p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong>DOI:</strong> <span className="text-gray-700">{article.doi || 'Mavjud emas'}</span></p>
+                            <p><strong>Sahifalar:</strong> <span className="text-gray-700">{article.pages || 'Mavjud emas'}</span></p>
+                            <p><strong>Ko'rishlar:</strong> <span className="text-gray-700">{article.views || 0}</span></p>
+                            {article.article_file && (
+                                <p><strong>Maqola fayli:</strong> 
+                                    <a 
+                                        href={article.article_file} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="ml-2 inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                                    >
+                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        PDF yuklab olish
+                                    </a>
+                                </p>
+                            )}
+                        </div>
                     </div>
+                </div>
 
-                    <h2 className="text-xl font-semibold mb-3">Annotatsiya</h2>
-                    <p className="mb-6">{mainTranslation?.abstract || 'Annotatsiya mavjud emas'}</p>
-
-                    {article.keywords && article.keywords.length > 0 && (
-                        <>
-                            <h2 className="text-xl font-semibold mt-6 mb-3">Kalit so'zlar</h2>
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {article.keywords.map(kw => (
-                                    <span key={kw.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                                        {kw.name}
-                                    </span>
-                                ))}
+                {/* Annotations in 3 languages */}
+                <div className="mb-8">
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-900">Annotatsiya</h2>
+                    <div className="space-y-6">
+                        {/* Uzbek Annotation */}
+                        {uzTranslation && (
+                            <div className="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                <h3 className="font-semibold text-blue-800 mb-2">O'zbek tilida</h3>
+                                <p className="text-gray-700 leading-relaxed">{uzTranslation.abstract}</p>
                             </div>
-                        </>
-                    )}
-                    
-                    {article.references && (
-                        <>
-                            <h2 className="text-xl font-semibold mt-6 mb-3">Foydalanilgan adabiyotlar</h2>
-                            <div className="text-sm whitespace-pre-line bg-gray-50 p-4 rounded-lg border">
+                        )}
+                        
+                        {/* Russian Annotation */}
+                        {ruTranslation && (
+                            <div className="p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                <h3 className="font-semibold text-green-800 mb-2">Rus tilida</h3>
+                                <p className="text-gray-700 leading-relaxed">{ruTranslation.abstract}</p>
+                            </div>
+                        )}
+                        
+                        {/* English Annotation */}
+                        {enTranslation && (
+                            <div className="p-4 border-l-4 border-purple-500 bg-purple-50 rounded-r-lg">
+                                <h3 className="font-semibold text-purple-800 mb-2">Ingliz tilida</h3>
+                                <p className="text-gray-700 leading-relaxed">{enTranslation.abstract}</p>
+                            </div>
+                        )}
+                        
+                        {/* If no translations found */}
+                        {(!uzTranslation && !ruTranslation && !enTranslation) && (
+                            <p className="text-gray-500 italic">Annotatsiya mavjud emas</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Keywords */}
+                {article.keywords && article.keywords.length > 0 && (
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4 text-gray-900">Kalit so'zlar</h2>
+                        <div className="flex flex-wrap gap-2">
+                            {article.keywords.map(kw => (
+                                <span key={kw.id} className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-300 hover:from-blue-200 hover:to-blue-300 transition-colors">
+                                    {kw.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                
+                {/* References */}
+                {article.references && (
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4 text-gray-900">Foydalanilgan adabiyotlar</h2>
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                            <div className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
                                 {article.references}
                             </div>
-                        </>
-                    )}
-                </div>
-                <div className="mt-8 flex gap-4">
+                        </div>
+                    </div>
+                )}
+                
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-4 pt-6 border-t border-gray-200">
                     <button 
                         onClick={() => navigate(-1)} 
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        className="flex items-center px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
                     >
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
                         Orqaga
                     </button>
+                    
+                    {article.article_file && (
+                        <a 
+                            href={article.article_file} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            PDF yuklab olish
+                        </a>
+                    )}
+                    
                     {article.doi && (
                         <a 
                             href={`https://doi.org/${article.doi}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                            className="flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                         >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
                             DOI orqali ko'rish
                         </a>
                     )}

@@ -100,8 +100,13 @@ class ArticleSerializer(serializers.ModelSerializer):
         """Override to return authors_read and keywords_read as authors and keywords in read operations"""
         data = super().to_representation(instance)
         # Replace the write-only fields with read-only equivalents for output
-        data['authors'] = data.pop('authors_read', [])
-        data['keywords'] = data.pop('keywords_read', [])
+        authors_data = data.pop('authors_read', [])
+        keywords_data = data.pop('keywords_read', [])
+        
+        # Ensure authors and keywords are properly included
+        data['authors'] = authors_data if authors_data is not None else []
+        data['keywords'] = keywords_data if keywords_data is not None else []
+        
         return data
 
     def create(self, validated_data):

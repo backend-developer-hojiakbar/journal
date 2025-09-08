@@ -59,7 +59,7 @@ const JournalInfo = () => {
                     </div>
                 </div>
 
-                {!loading && latestYear && (
+                {/* {!loading && latestYear && (
                     <div className="mt-12">
                         <h3 className="text-2xl text-center font-semibold text-gray-900 mb-6">So'nggi nashrlar:</h3>
                         <div className="flex justify-center">
@@ -69,7 +69,7 @@ const JournalInfo = () => {
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
                 
                 {loading && (
                     <div className="mt-12 text-center py-8">

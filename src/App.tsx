@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import Footer from './components/Footer';
 import Login from './pages/Login';
 import ArticleDetail from './pages/ArticleDetail';
+import JournalDetail from './pages/JournalDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageNews from './pages/admin/ManageNews';
 import ManageIssues from './pages/admin/ManageIssues';
@@ -36,6 +37,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/current/:journalType" element={<Current />} />
             <Route path="/archive" element={<Archive />} />
+            <Route path="/journal/:journalType" element={<JournalDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/article/:id" element={<ArticleDetail />} />
             <Route path="/login" element={<Login />} />
