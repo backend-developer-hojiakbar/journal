@@ -40,7 +40,7 @@ const JournalInfo = () => {
                         <p>Muassis: O‘zbekiston Respublikasi Qishloq xo'jaligi va Suv xo'jaligi vazirliklari</p>
                         <p>Bosh muharrir: Tohir DOLIYEV</p>
                         <p className="text-base mt-6">
-                            «O'zbekiston qishloq va suv xo'jaligi» jurnali 1906-yildan, «Agro ilm» jurnali esa 2007-yildan buyon chop etilib kelinmoqda...
+                            «O'zbekiston qishloq va suv xo'jaligi» jurnali 1906-yildan, «Agro ilm» jurnali esa 2007-yildan buyon chop etilib kelinmoqda.
                         </p>
                         <p className="text-base">
                             Jurnallarimiz O‘zbekiston Respublikasi Oliy attestatsiya komissiyasi Rayosatining qarori bilan quyidagi fanlar bo‘yicha ilmiy jurnallar ro‘yxatiga kiritilgan.

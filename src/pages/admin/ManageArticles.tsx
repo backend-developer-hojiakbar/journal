@@ -33,6 +33,11 @@ const ManageArticles = () => {
   const [formData, setFormData] = useState<any>(initialFormData);
   const [newAuthor, setNewAuthor] = useState({ first_name: '', last_name: '', organization: '', position: '' });
   const [newKeyword, setNewKeyword] = useState('');
+  const [multilingualKeywords, setMultilingualKeywords] = useState({
+    uz: '',
+    ru: '',
+    en: ''
+  });
   const [showNewAuthorForm, setShowNewAuthorForm] = useState(false);
   const [showNewKeywordForm, setShowNewKeywordForm] = useState(false);
 
@@ -86,6 +91,7 @@ const ManageArticles = () => {
     setShowNewKeywordForm(false);
     setNewAuthor({ first_name: '', last_name: '', organization: '', position: '' });
     setNewKeyword('');
+    setMultilingualKeywords({ uz: '', ru: '', en: '' });
   };
 
   const closeModal = () => {
@@ -151,12 +157,73 @@ const ManageArticles = () => {
     }
   };
 
+  const addMultilingualKeywords = async () => {
+    const { uz, ru, en } = multilingualKeywords;
+    
+    // Check if at least one language has keywords
+    if (!uz.trim() && !ru.trim() && !en.trim()) {
+      alert('Kamida bitta tilda kalit so\'zlar kiritilishi shart!');
+      return;
+    }
+    
+    try {
+      const newKeywordIds: number[] = [];
+      
+      // Process each language separately
+      for (const [lang, text] of Object.entries(multilingualKeywords)) {
+        if (text.trim()) {
+          const keywordList = text.split(',').map(k => k.trim()).filter(k => k.length > 0);
+          
+          for (const keywordName of keywordList) {
+            // Create keyword name with language suffix for identification
+            const langSuffix = lang === 'uz' ? '' : `_${lang}`;
+            const fullKeywordName = `${keywordName}${langSuffix}`;
+            
+            // Check if keyword already exists
+            const existing = keywords.find(k => k.name.toLowerCase() === fullKeywordName.toLowerCase());
+            if (existing) {
+              newKeywordIds.push(existing.id);
+            } else {
+              // Create new keyword
+              const response = await apiClient.post('/keywords/', { name: fullKeywordName });
+              const createdKeyword = response.data;
+              setKeywords(prev => [...prev, createdKeyword]);
+              newKeywordIds.push(createdKeyword.id);
+            }
+          }
+        }
+      }
+      
+      // Add all keywords to selected list
+      setFormData((prev: any) => ({
+        ...prev,
+        keyword_ids: [...new Set([...prev.keyword_ids, ...newKeywordIds])]
+      }));
+      
+      setMultilingualKeywords({ uz: '', ru: '', en: '' });
+      setShowNewKeywordForm(false);
+      
+      const totalAdded = newKeywordIds.length;
+      alert(`✅ ${totalAdded} ta kalit so'z muvaffaqiyatli qo'shildi!`);
+    } catch (error) {
+      console.error('Error creating multilingual keywords:', error);
+      alert('❌ Kalit so\'zlarni qo\'shishda xatolik yuz berdi!');
+    }
+  };
+
   const handleTranslationChange = (idx:number, field:'language'|'title'|'abstract', value:string) => {
     setFormData((p:any)=>{
       const arr = [...p.translations];
       arr[idx] = {...arr[idx], [field]: value};
       return {...p, translations: arr};
     });
+  };
+
+  const handleMultilingualKeywordChange = (language: 'uz' | 'ru' | 'en', value: string) => {
+    setMultilingualKeywords(prev => ({
+      ...prev,
+      [language]: value
+    }));
   };
 
   const toggleAuthor = (id:number) => {
@@ -444,10 +511,10 @@ const ManageArticles = () => {
                 </div>
               </div>
 
-              {/* Keywords Section with Bulk Input */}
+              {/* Keywords Section with Multilingual Support */}
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center mb-3">
-                  <h4 className="font-medium text-gray-700">Kalit so'zlar ({formData.keyword_ids.length} tanlangan):</h4>
+                  <h4 className="font-medium text-gray-700">Kalit so'zlar (3 tilda) ({formData.keyword_ids.length} tanlangan):</h4>
                   <button type="button" onClick={() => setShowNewKeywordForm(!showNewKeywordForm)} className="flex items-center px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
                     <Plus size={16} className="mr-1" /> Kalit so'zlar qo'shish
                   </button>
@@ -473,69 +540,75 @@ const ManageArticles = () => {
                   </div>
                 )}
                 
-                {/* New Keywords Form with Bulk Input */}
+                {/* New Keywords Form with Multilingual Input */}
                 {showNewKeywordForm && (
                   <div className="mb-4 p-4 border-2 border-blue-300 rounded bg-blue-50">
-                    <h5 className="font-medium text-blue-800 mb-3">Kalit so'zlar qo'shish:</h5>
+                    <h5 className="font-medium text-blue-800 mb-3">Kalit so'zlar qo'shish (3 tilda):</h5>
                     
-                    {/* Bulk Keywords Input */}
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium mb-2">Ko'p kalit so'zlarni birdan qo'shish (vergul bilan ajrating):</label>
-                      <textarea 
-                        placeholder="Masalan: qishloq xo'jaligi, ekin, sug'orish, tuproq, texnologiya"
-                        value={newKeyword}
-                        onChange={(e) => setNewKeyword(e.target.value)}
-                        rows={3}
-                        className="w-full border rounded px-3 py-2 text-sm"
-                      />
-                      <p className="text-xs text-blue-600 mt-1">💡 Maslahat: Bir nechta kalit so'zni vergul (,) bilan ajratib yozing</p>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm text-blue-700">Har bir tilda kalit so'zlarni vergul bilan ajratib yozing:</p>
+                        <button 
+                          type="button" 
+                          onClick={() => {
+                            const uzText = multilingualKeywords.uz;
+                            if (uzText.trim()) {
+                              setMultilingualKeywords(prev => ({
+                                ...prev,
+                                ru: uzText,
+                                en: uzText
+                              }));
+                            }
+                          }}
+                          className="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+                        >
+                          O'zbekchadan kopya qilish
+                        </button>
+                      </div>
+                      
+                      {/* Uzbek Keywords Input */}
+                      <div className="p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                        <label className="block text-sm font-medium text-blue-800 mb-2">O'zbek tilida kalit so'zlar:</label>
+                        <textarea 
+                          placeholder="Masalan: qishloq xo'jaligi, ekin, sug'orish, tuproq"
+                          value={multilingualKeywords.uz}
+                          onChange={(e) => handleMultilingualKeywordChange('uz', e.target.value)}
+                          rows={2}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                        />
+                      </div>
+                      
+                      {/* Russian Keywords Input */}
+                      <div className="p-3 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                        <label className="block text-sm font-medium text-green-800 mb-2">Rus tilida kalit so'zlar:</label>
+                        <textarea 
+                          placeholder="Например: сельское хозяйство, урожай, орошение, почва"
+                          value={multilingualKeywords.ru}
+                          onChange={(e) => handleMultilingualKeywordChange('ru', e.target.value)}
+                          rows={2}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                        />
+                      </div>
+                      
+                      {/* English Keywords Input */}
+                      <div className="p-3 border-l-4 border-purple-500 bg-purple-50 rounded-r-lg">
+                        <label className="block text-sm font-medium text-purple-800 mb-2">Ingliz tilida kalit so'zlar:</label>
+                        <textarea 
+                          placeholder="For example: agriculture, crop, irrigation, soil"
+                          value={multilingualKeywords.en}
+                          onChange={(e) => handleMultilingualKeywordChange('en', e.target.value)}
+                          rows={2}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                        />
+                      </div>
+                      
+                      <p className="text-xs text-blue-600 mt-2">💡 Maslahat: Har bir tilda kalit so'zlarni vergul (,) bilan ajratib yozing</p>
                     </div>
                     
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-4">
                       <button 
                         type="button" 
-                        onClick={async () => {
-                          if (!newKeyword.trim()) {
-                            alert('Kalit so\'zlarni kiriting!');
-                            return;
-                          }
-                          
-                          const keywordList = newKeyword.split(',').map(k => k.trim()).filter(k => k.length > 0);
-                          if (keywordList.length === 0) {
-                            alert('Hech qanday kalit so\'z topilmadi!');
-                            return;
-                          }
-                          
-                          try {
-                            const newKeywordIds: number[] = [];
-                            for (const keywordName of keywordList) {
-                              // Check if keyword already exists
-                              const existing = keywords.find(k => k.name.toLowerCase() === keywordName.toLowerCase());
-                              if (existing) {
-                                newKeywordIds.push(existing.id);
-                              } else {
-                                // Create new keyword
-                                const response = await apiClient.post('/keywords/', { name: keywordName });
-                                const createdKeyword = response.data;
-                                setKeywords(prev => [...prev, createdKeyword]);
-                                newKeywordIds.push(createdKeyword.id);
-                              }
-                            }
-                            
-                            // Add all keywords to selected list
-                            setFormData((prev: any) => ({
-                              ...prev,
-                              keyword_ids: [...new Set([...prev.keyword_ids, ...newKeywordIds])]
-                            }));
-                            
-                            setNewKeyword('');
-                            setShowNewKeywordForm(false);
-                            alert(`✅ ${keywordList.length} ta kalit so'z muvaffaqiyatli qo'shildi!`);
-                          } catch (error) {
-                            console.error('Error creating keywords:', error);
-                            alert('❌ Kalit so\'zlarni qo\'shishda xatolik yuz berdi!');
-                          }
-                        }}
+                        onClick={addMultilingualKeywords}
                         className="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
                       >
                         <Plus size={16} className="inline mr-1" /> Kalit so'zlarni qo'shish

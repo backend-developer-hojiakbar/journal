@@ -62,7 +62,11 @@ const JournalDetail = () => {
 
                 // Fetch issues for this journal
                 const issuesResponse = await apiClient.get(`/issues/?journal=${journalType}`);
-                setIssues(issuesResponse.data);
+                // Sort issues by publication date (oldest first)
+                const sortedIssues = issuesResponse.data.sort((a: Issue, b: Issue) => 
+                    new Date(a.published_date).getTime() - new Date(b.published_date).getTime()
+                );
+                setIssues(sortedIssues);
             } catch (error) {
                 console.error("Failed to fetch journal data", error);
             } finally {

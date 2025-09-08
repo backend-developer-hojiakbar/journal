@@ -49,7 +49,7 @@ const Archive = () => {
                     issues: (issuesData || []).filter((issue: Issue) => 
                         issue.journal_type === journal.short_name
                     ).sort((a: Issue, b: Issue) => 
-                        new Date(b.published_date).getTime() - new Date(a.published_date).getTime()
+                        new Date(a.published_date).getTime() - new Date(b.published_date).getTime()
                     )
                 }));
 

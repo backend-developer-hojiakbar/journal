@@ -216,16 +216,63 @@ const ArticleDetail = () => {
                     </div>
                 </div>
 
-                {/* Keywords */}
+                {/* Keywords in 3 languages */}
                 {article.keywords && article.keywords.length > 0 && (
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-900">Kalit so'zlar</h2>
-                        <div className="flex flex-wrap gap-2">
-                            {article.keywords.map(kw => (
-                                <span key={kw.id} className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-300 hover:from-blue-200 hover:to-blue-300 transition-colors">
-                                    {kw.name}
-                                </span>
-                            ))}
+                        
+                        {/* Group keywords by language */}
+                        <div className="space-y-4">
+                            {/* Uzbek Keywords */}
+                            {(() => {
+                                const uzKeywords = article.keywords.filter((kw: any) => !kw.name.includes('_ru') && !kw.name.includes('_en'));
+                                return uzKeywords.length > 0 && (
+                                    <div className="p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                        <h3 className="font-semibold text-blue-800 mb-2">O'zbek tilida:</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {uzKeywords.map((kw: any) => (
+                                                <span key={kw.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium border border-blue-300">
+                                                    {kw.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+                            
+                            {/* Russian Keywords */}
+                            {(() => {
+                                const ruKeywords = article.keywords.filter((kw: any) => kw.name.includes('_ru'));
+                                return ruKeywords.length > 0 && (
+                                    <div className="p-3 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                        <h3 className="font-semibold text-green-800 mb-2">Rus tilida:</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {ruKeywords.map((kw: any) => (
+                                                <span key={kw.id} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium border border-green-300">
+                                                    {kw.name.replace('_ru', '')}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+                            
+                            {/* English Keywords */}
+                            {(() => {
+                                const enKeywords = article.keywords.filter((kw: any) => kw.name.includes('_en'));
+                                return enKeywords.length > 0 && (
+                                    <div className="p-3 border-l-4 border-purple-500 bg-purple-50 rounded-r-lg">
+                                        <h3 className="font-semibold text-purple-800 mb-2">Ingliz tilida:</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {enKeywords.map((kw: any) => (
+                                                <span key={kw.id} className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium border border-purple-300">
+                                                    {kw.name.replace('_en', '')}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </div>
                 )}
