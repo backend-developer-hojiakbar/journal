@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 // BU QATOR O'ZGARTIRILDI: .tsx kengaytmasi olib tashlandi
-import { AuthProvider } from './context/AuthContext.js'; 
+import { AuthProvider } from './context/AuthContext.js';
+
+// Import upload tester for debugging
+import './utils/uploadTester.ts'; 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

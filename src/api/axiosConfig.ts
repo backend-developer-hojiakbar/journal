@@ -5,6 +5,9 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 120000, // 2 minutes timeout for large file uploads
+  maxContentLength: 100 * 1024 * 1024, // 100MB max content length
+  maxBodyLength: 100 * 1024 * 1024, // 100MB max body length
 });
 
 // Debug: baseURL ni console ga chiqarish

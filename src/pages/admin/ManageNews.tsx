@@ -63,6 +63,11 @@ const ManageNews = () => {
                 return;
             }
             
+            // Show file size info to user
+            if (file) {
+                console.log(`Selected file: ${file.name}, Size: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+            }
+            
             setFormData({ ...formData, [e.target.name]: file });
         } else {
             setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -71,12 +76,22 @@ const ManageNews = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Show loading state
+        const submitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement;
+        const originalText = submitButton?.textContent;
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Yuklanmoqda...';
+        }
+        
         try {
             const submitData = new FormData();
             submitData.append('title', formData.title);
             submitData.append('content', formData.content);
             
             if (formData.image) {
+                console.log(`Uploading file: ${formData.image.name}, Size: ${(formData.image.size / 1024 / 1024).toFixed(2)} MB`);
                 submitData.append('image', formData.image);
             }
 
@@ -84,6 +99,7 @@ const ManageNews = () => {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+                timeout: 60000, // 60 seconds timeout for large files
             };
 
             if (editingItem) {
@@ -93,9 +109,37 @@ const ManageNews = () => {
             }
             fetchData();
             handleCloseModal();
-        } catch (error) {
+            alert('Yangilik muvaffaqiyatli saqlandi!');
+        } catch (error: any) {
             console.error('Error submitting news:', error);
-            alert("Xatolik yuz berdi!");
+            console.log('Request details:', {
+                fileSize: formData.image ? `${(formData.image.size / 1024 / 1024).toFixed(2)} MB` : 'No file',
+                fileName: formData.image?.name,
+                url: error.config?.url,
+                method: error.config?.method
+            });
+            
+            // Handle different types of errors
+            if (error.code === 'ECONNABORTED') {
+                alert('Yuklash vaqti tugadi. Fayl juda katta yoki internet sekin. Qaytadan urinib ko\'ring.');
+            } else if (error.response?.status === 413) {
+                const fileSize = formData.image ? (formData.image.size / 1024 / 1024).toFixed(2) : '0';
+                alert(`🚨 413 Xatoligi - Fayl juda katta!\n\nFayl hajmi: ${fileSize} MB\nServer limiti: Hali ham 1MB (sozlash ishlamagan)\n\n✅ Yechimlar:\n1. Server administratori Nginx ni to'liq qayta ishga tushirishi kerak\n2. nginx.conf faylida http blokiga qo'shish: client_max_body_size 50M;\n3. Barcha konfiguratsiya fayllarini tekshirish\n\n🔧 Vaqtinchalik yechim: 1MB dan kichik rasm yuklang`);
+            } else if (error.response?.status === 400 && error.response?.data) {
+                // Handle Django validation errors
+                const errorMsg = error.response.data.image?.[0] || error.response.data.detail || "Ma'lumotlar noto'g'ri";
+                alert(`Xatolik: ${errorMsg}`);
+            } else if (error.response?.status === 500) {
+                alert('Server xatosi yuz berdi. Administrator bilan bog\'laning.');
+            } else {
+                alert(`Xatolik yuz berdi: ${error.message || 'Noma\'lum xatolik'}\n\nIltimos qaytadan urinib ko\'ring.`);
+            }
+        } finally {
+            // Reset button state
+            if (submitButton && originalText) {
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
         }
     };
 
@@ -172,7 +216,15 @@ const ManageNews = () => {
                             onChange={handleChange} 
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
-                        <p className="text-xs text-gray-500 mt-1">Maksimal hajm: 10 MB</p>
+                        <div className="mt-1 text-xs text-gray-500">
+                            <p>Maksimal hajm: 10 MB</p>
+                            <p>Qo'llab-quvvatlanadigan formatlar: JPG, PNG, GIF, WebP</p>
+                            {formData.image && (
+                                <p className="text-green-600 font-medium">
+                                    Tanlangan: {formData.image.name} ({(formData.image.size / 1024 / 1024).toFixed(2)} MB)
+                                </p>
+                            )}
+                        </div>
                         {editingItem && editingItem.image && (
                             <div className="mt-2">
                                 <p className="text-sm text-gray-600">Joriy rasm:</p>

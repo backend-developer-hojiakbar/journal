@@ -280,9 +280,18 @@ const ManageArticles = () => {
       }
       await fetchData();
       closeModal();
-    } catch (err) {
-      console.error("Submit Error:", err);
-      alert("Maqolani saqlashda xatolik yuz berdi!");
+    } catch (error: any) {
+      console.error("Submit Error:", error);
+      
+      // Handle different types of errors
+      if (error.response?.status === 413) {
+        alert("Fayl juda katta! Server tomonidan rad etildi. Administrator bilan bog'laning yoki kichikroq fayl yuklang.");
+      } else if (error.response?.status === 400 && error.response?.data) {
+        const errorMsg = error.response.data.article_file?.[0] || error.response.data.detail || "Ma'lumotlar noto'g'ri";
+        alert(`Xatolik: ${errorMsg}`);
+      } else {
+        alert("Maqolani saqlashda xatolik yuz berdi! Iltimos qaytadan urinib ko'ring.");
+      }
     }
   };
 

@@ -189,7 +189,16 @@ const ManageIssues = () => {
             handleCloseModal();
         } catch (error: any) {
             console.error("Failed to save issue", error.response?.data);
-            alert("Xatolik yuz berdi!");
+            
+            // Handle different types of errors
+            if (error.response?.status === 413) {
+                alert("Fayl juda katta! Server tomonidan rad etildi. Administrator bilan bog'laning yoki kichikroq fayl yuklang.");
+            } else if (error.response?.status === 400 && error.response?.data) {
+                const errorMsg = error.response.data.cover_image?.[0] || error.response.data.pdf_file?.[0] || error.response.data.detail || "Ma'lumotlar noto'g'ri";
+                alert(`Xatolik: ${errorMsg}`);
+            } else {
+                alert("Xatolik yuz berdi! Iltimos qaytadan urinib ko'ring.");
+            }
         }
     };
 
