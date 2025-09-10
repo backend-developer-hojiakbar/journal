@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const journalCover1 = "/covers/qxj.jpg"; 
-const journalCover2 = "/covers/agro-ilm.jpg"; 
+const journalCover1 = "/qx.jpg"; 
+const journalCover2 = "/ai.jpg"; 
 
 const Hero = () => {
   return (
@@ -43,16 +43,16 @@ const Hero = () => {
             </div>
           </div>
           
-          <div className="md:w-1/2 flex justify-center items-center gap-4">
+          <div className="md:w-1/2 flex justify-center items-center relative">
             <img
               src={journalCover1}
               alt="O'zbekiston qishloq va suv xo'jaligi jurnali"
-              className="rounded-lg shadow-2xl transform rotate-[-3deg] hover:rotate-0 transition-transform duration-300 w-1/2 max-w-[200px]"
+              className="rounded-lg shadow-2xl transform rotate-[-5deg] hover:rotate-[-2deg] hover:z-30 hover:scale-105 transition-all duration-300 w-64 h-80 object-cover z-10 relative cursor-pointer"
             />
             <img
               src={journalCover2}
               alt="Agro ilm jurnali"
-              className="rounded-lg shadow-2xl transform rotate-[3deg] hover:rotate-0 transition-transform duration-300 w-1/2 max-w-[200px] mt-8"
+              className="rounded-lg shadow-2xl transform rotate-[5deg] hover:rotate-[2deg] hover:z-30 hover:scale-105 transition-all duration-300 w-64 h-80 object-cover z-20 relative -ml-16 mt-8 cursor-pointer"
             />
           </div>
         </div>
