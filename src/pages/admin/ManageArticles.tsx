@@ -103,8 +103,19 @@ const ManageArticles = () => {
   const handleBasicChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     if (type === 'file') {
-      const f = (e.target as HTMLInputElement).files?.[0] || null;
-      setFormData((p:any)=>({...p, [name]: f}));
+      const fileInput = e.target as HTMLInputElement;
+      const file = fileInput.files?.[0] || null;
+      
+      // Validate file size for PDF files (100MB limit)
+      if (file && name === 'article_file') {
+        if (file.size > 100 * 1024 * 1024) {
+          alert(`PDF fayl hajmi 100 MB dan oshmasligi kerak. Sizning faylingiz ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
+          fileInput.value = ''; // Clear the file input
+          return;
+        }
+      }
+      
+      setFormData((p:any)=>({...p, [name]: file}));
     } else {
       setFormData((p:any)=>({...p, [name]: value}));
     }
@@ -354,7 +365,14 @@ const ManageArticles = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Maqola fayli (PDF)</label>
-                <input type="file" name="article_file" accept="application/pdf" onChange={handleBasicChange}/>
+                <input 
+                  type="file" 
+                  name="article_file" 
+                  accept="application/pdf" 
+                  onChange={handleBasicChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">Maksimal hajm: 100 MB</p>
               </div>
             </div>
           )}

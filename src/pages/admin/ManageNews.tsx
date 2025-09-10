@@ -54,7 +54,16 @@ const ManageNews = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (e.target.type === 'file') {
             const fileInput = e.target as HTMLInputElement;
-            setFormData({ ...formData, [e.target.name]: fileInput.files?.[0] || null });
+            const file = fileInput.files?.[0] || null;
+            
+            // Validate file size (10MB for images)
+            if (file && file.size > 10 * 1024 * 1024) {
+                alert(`Rasm hajmi 10 MB dan oshmasligi kerak. Sizning faylingiz ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
+                fileInput.value = ''; // Clear the file input
+                return;
+            }
+            
+            setFormData({ ...formData, [e.target.name]: file });
         } else {
             setFormData({ ...formData, [e.target.name]: e.target.value });
         }
@@ -163,6 +172,7 @@ const ManageNews = () => {
                             onChange={handleChange} 
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
+                        <p className="text-xs text-gray-500 mt-1">Maksimal hajm: 10 MB</p>
                         {editingItem && editingItem.image && (
                             <div className="mt-2">
                                 <p className="text-sm text-gray-600">Joriy rasm:</p>

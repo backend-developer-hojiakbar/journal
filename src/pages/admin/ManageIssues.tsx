@@ -109,8 +109,29 @@ const ManageIssues = () => {
         if (type === 'checkbox') {
             setFormData({ ...formData, [name]: (e.target as HTMLInputElement).checked });
         } else if (type === 'file') {
-            const files = (e.target as HTMLInputElement).files;
-            setFormData({ ...formData, [name]: files?.[0] || null });
+            const fileInput = e.target as HTMLInputElement;
+            const file = fileInput.files?.[0] || null;
+            
+            // Validate file size based on file type
+            if (file) {
+                if (name === 'cover_image') {
+                    // Image files: 10MB limit
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`Rasm hajmi 10 MB dan oshmasligi kerak. Sizning faylingiz ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
+                        fileInput.value = ''; // Clear the file input
+                        return;
+                    }
+                } else if (name === 'pdf_file') {
+                    // PDF files: 100MB limit
+                    if (file.size > 100 * 1024 * 1024) {
+                        alert(`PDF fayl hajmi 100 MB dan oshmasligi kerak. Sizning faylingiz ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
+                        fileInput.value = ''; // Clear the file input
+                        return;
+                    }
+                }
+            }
+            
+            setFormData({ ...formData, [name]: file });
         } else if (type === 'radio') {
             setFormData({ ...formData, [name]: value });
         } else {
@@ -286,11 +307,25 @@ const ManageIssues = () => {
                     </div>
                      <div>
                         <label className="block text-sm font-medium">Muqova rasmi</label>
-                        <input type="file" name="cover_image" onChange={handleChange} className="w-full"/>
+                        <input 
+                            type="file" 
+                            name="cover_image" 
+                            accept="image/*" 
+                            onChange={handleChange} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Maksimal hajm: 10 MB</p>
                     </div>
                      <div>
                         <label className="block text-sm font-medium">PDF Fayl</label>
-                        <input type="file" name="pdf_file" onChange={handleChange} className="w-full"/>
+                        <input 
+                            type="file" 
+                            name="pdf_file" 
+                            accept=".pdf" 
+                            onChange={handleChange} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Maksimal hajm: 100 MB</p>
                     </div>
                     <div className="space-y-3">
                         <div className="flex items-center">
