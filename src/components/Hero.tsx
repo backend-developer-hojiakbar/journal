@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const journalCover1 = "/qx.jpg"; 
-const journalCover2 = "/ai.jpg"; 
+const journalCover1 = "/images/qx.jpg"; 
+const journalCover2 = "/images/ai.jpg"; 
 
 const Hero = () => {
   return (
