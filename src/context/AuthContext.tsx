@@ -3,24 +3,33 @@ import apiClient from '../api/axiosConfig';
 
 interface AuthContextType {
   token: string | null;
-  login: (username, password) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  // Clear any existing localStorage token on app start to prevent conflicts
+  const [token, setToken] = useState<string | null>(() => {
+    // Remove any legacy localStorage token
+    localStorage.removeItem('token');
+    // Use sessionStorage for session-based authentication
+    return sessionStorage.getItem('token');
+  });
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
+      // Ensure localStorage doesn't have conflicting token
+      localStorage.removeItem('token');
     } else {
+      sessionStorage.removeItem('token');
       localStorage.removeItem('token');
     }
   }, [token]);
 
-  const login = async (username, password) => {
+  const login = async (username: string, password: string) => {
     try {
       const response = await apiClient.post('/get-token/', { username, password });
       setToken(response.data.token);
@@ -33,6 +42,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setToken(null);
+    // Ensure complete cleanup of any stored tokens
+    sessionStorage.removeItem('token');
+    localStorage.removeItem('token');
   };
 
   return (

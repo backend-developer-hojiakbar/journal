@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/',
@@ -8,8 +8,9 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 apiClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
+  (config: InternalAxiosRequestConfig) => {
+    // Use sessionStorage for per-session authentication
+    const token = sessionStorage.getItem('token');
     if (token && config.headers) {
       config.headers.Authorization = `Token ${token}`;
     }
