@@ -12,6 +12,8 @@ interface Author {
     id: number;
     first_name: string;
     last_name: string;
+    patronymic?: string;
+    orcid_id?: string;
     organization?: string;
     position?: string;
 }
@@ -143,13 +145,32 @@ const ArticleDetail = () => {
                             {article.authors && article.authors.length > 0 ? (
                                 <ul className="ml-4 space-y-1">
                                     {article.authors.map((author, index) => (
-                                        <li key={author.id || index} className="text-gray-700">
-                                            <span className="font-medium">{author.last_name} {author.first_name}</span>
+                                        <li key={author.id || index} className="text-gray-700 border-b border-gray-100 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0">
+                                            <div className="font-medium text-gray-900">
+                                                {author.last_name} {author.first_name} {author.patronymic && author.patronymic}
+                                            </div>
+                                            {author.orcid_id && (
+                                                <div className="text-sm text-blue-600 mt-1">
+                                                    <span className="font-medium">ORCID iD:</span> 
+                                                    <a 
+                                                        href={`https://orcid.org/${author.orcid_id}`} 
+                                                        target="_blank" 
+                                                        rel="noopener noreferrer"
+                                                        className="ml-1 underline hover:text-blue-800"
+                                                    >
+                                                        {author.orcid_id}
+                                                    </a>
+                                                </div>
+                                            )}
                                             {author.organization && (
-                                                <span className="text-sm text-gray-600 ml-2">({author.organization})</span>
+                                                <div className="text-sm text-gray-600 mt-1">
+                                                    <span className="font-medium">Tashkilot:</span> {author.organization}
+                                                </div>
                                             )}
                                             {author.position && (
-                                                <span className="text-sm text-gray-500 block ml-2">{author.position}</span>
+                                                <div className="text-sm text-gray-500 mt-1">
+                                                    <span className="font-medium">Lavozim:</span> {author.position}
+                                                </div>
                                             )}
                                         </li>
                                     ))}

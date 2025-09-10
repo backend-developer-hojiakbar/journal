@@ -30,7 +30,9 @@ interface Author {
     first_name: string;
     last_name: string;
     patronymic: string;
+    orcid_id?: string;
     organization: string;
+    position?: string;
 }
 
 interface Translation {
@@ -248,9 +250,10 @@ const JournalDetail = () => {
                                                                         <div className="flex items-center">
                                                                             <User className="w-4 h-4 mr-1" />
                                                                             <span>
-                                                                                {articleAuthors.map(author => 
-                                                                                    `${author.last_name} ${author.first_name?.charAt(0) || ''}.`
-                                                                                ).join(', ')}
+                                                                                {articleAuthors.map(author => {
+                                                                                    const fullName = `${author.last_name} ${author.first_name?.charAt(0) || ''}.`;
+                                                                                    return author.patronymic ? `${fullName} ${author.patronymic?.charAt(0)}.` : fullName;
+                                                                                }).join(', ')}
                                                                             </span>
                                                                         </div>
                                                                     )}

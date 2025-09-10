@@ -31,7 +31,7 @@ const ManageArticles = () => {
     references: ''
   };
   const [formData, setFormData] = useState<any>(initialFormData);
-  const [newAuthor, setNewAuthor] = useState({ first_name: '', last_name: '', organization: '', position: '' });
+  const [newAuthor, setNewAuthor] = useState({ first_name: '', last_name: '', patronymic: '', orcid_id: '', organization: '', position: '' });
   const [newKeyword, setNewKeyword] = useState('');
   const [multilingualKeywords, setMultilingualKeywords] = useState({
     uz: '',
@@ -89,9 +89,10 @@ const ManageArticles = () => {
     setIsModalOpen(true);
     setShowNewAuthorForm(false);
     setShowNewKeywordForm(false);
-    setNewAuthor({ first_name: '', last_name: '', organization: '', position: '' });
+    setNewAuthor({ first_name: '', last_name: '', patronymic: '', orcid_id: '', organization: '', position: '' });
     setNewKeyword('');
     setMultilingualKeywords({ uz: '', ru: '', en: '' });
+    setNewAuthor({ first_name: '', last_name: '', patronymic: '', orcid_id: '', organization: '', position: '' });
   };
 
   const closeModal = () => {
@@ -122,7 +123,7 @@ const ManageArticles = () => {
         ...p,
         author_ids: [...p.author_ids, createdAuthor.id]
       }));
-      setNewAuthor({ first_name: '', last_name: '', organization: '', position: '' });
+      setNewAuthor({ first_name: '', last_name: '', patronymic: '', orcid_id: '', organization: '', position: '' });
       setShowNewAuthorForm(false);
       // Success feedback
       const successMsg = `✅ Muallif "${createdAuthor.last_name} ${createdAuthor.first_name}" muvaffaqiyatli qo'shildi va avtomatik tanlandi!`;
@@ -460,6 +461,14 @@ const ManageArticles = () => {
                       <div>
                         <label className="block text-sm font-medium mb-1">Familiya *</label>
                         <input type="text" placeholder="Muallifning familiyasi" value={newAuthor.last_name} onChange={(e) => setNewAuthor({...newAuthor, last_name: e.target.value})} className="w-full border rounded px-3 py-2 text-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Otasining ismi</label>
+                        <input type="text" placeholder="Otasining ismi" value={newAuthor.patronymic} onChange={(e) => setNewAuthor({...newAuthor, patronymic: e.target.value})} className="w-full border rounded px-3 py-2 text-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">ORCID ID</label>
+                        <input type="text" placeholder="0000-0002-1495-3967" value={newAuthor.orcid_id} onChange={(e) => setNewAuthor({...newAuthor, orcid_id: e.target.value})} className="w-full border rounded px-3 py-2 text-sm" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Tashkilot</label>
