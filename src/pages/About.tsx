@@ -125,7 +125,7 @@ const About = () => {
     <div className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">TAHRIRIYAT</h1>
+          <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">JURNAL HAQIDA</h1>
           
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -166,7 +166,7 @@ const About = () => {
             )}
           </div>
           
-          <div>
+          <div className="mb-12">
             <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">"Agro ilm" jurnali Tahrir hay`ati a`zolari</h2>
             
             {aiBoard.length > 0 ? (
@@ -193,22 +193,54 @@ const About = () => {
             )}
           </div>
           
-          {/* Debug Information
-          <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h3 className="font-semibold text-yellow-800 mb-2">Debug ma'lumotlari:</h3>
-            <p className="text-yellow-700 text-sm">QX Board count: {qxBoard.length}</p>
-            <p className="text-yellow-700 text-sm">AI Board count: {aiBoard.length}</p>
-            <p className="text-yellow-700 text-sm">API endpoint: /board-members/ (barcha a'zolar)</p>
-            <p className="text-yellow-700 text-sm">Filter: journal_short_name = 'qx' yoki 'ai'</p>
-            <div className="mt-2">
-              <p className="text-yellow-700 text-xs">Console loglarni tekshiring. Agar ma'lumotlar ko'rinmasa:</p>
-              <ul className="text-yellow-700 text-xs ml-4 list-disc">
-                <li>Admin panelda tahririyat a'zolarini qo'shing</li>
-                <li>Journal maydonini to'g'ri tanlang (QX yoki AI)</li>
-                <li>Browser consoleni tekshiring</li>
-              </ul>
+          {/* Journal Requirements Section - Moved to the bottom */}
+          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">Jurnal Talablari</h2>
+            
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h3 className="text-lg font-semibold text-blue-700 mb-2">Maqola Talablari</h3>
+                <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                  <li>Maqola hajmi 8-12 bet (15 000-20 000 belgi) bo'lishi kerak</li>
+                  <li>Maqola uch tilga (o'zbek, rus, ingliz) tarjima qilinishi shart</li>
+                  <li>Maqolada 15-20 ta ilmiy manba bo'lishi kerak</li>
+                  <li>Maqola DOC yoki DOCX formatda yuborilishi kerak</li>
+                  <li>Maqola PDF formatda ham yuborilishi kerak</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h3 className="text-lg font-semibold text-blue-700 mb-2">Muallif Talablari</h3>
+                <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                  <li>Muallif ORCID ID ga ega bo'lishi tavsiya etiladi</li>
+                  <li>Muallifning to'liq F.I.SH. ko'rsatilishi kerak</li>
+                  <li>Muallifning ilmiy darajasi va unvoni ko'rsatilishi kerak</li>
+                  <li>Muallifning ish joyi va lavozimi ko'rsatilishi kerak</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h3 className="text-lg font-semibold text-blue-700 mb-2">Formatlash Talablari</h3>
+                <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                  <li>Shrift: Times New Roman, 12 punkt</li>
+                  <li>Qatorlar orasi: 1.5</li>
+                  <li>Chapdan chegara: 3 sm, o'ngdan chegara: 2 sm</li>
+                  <li>Yuqoridan chegara: 2 sm, pastdan chegara: 2 sm</li>
+                  <li>Raqamlar uch xonalik guruhlarga ajratiladi</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h3 className="text-lg font-semibold text-blue-700 mb-2">Yuborish Talablari</h3>
+                <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                  <li>Maqola ilmiy-redaktor tomonidan ko'rib chiqiladi</li>
+                  <li>Maqola plagiat tekshiruvidan o'tkaziladi</li>
+                  <li>Maqola muvaffaqiyatli qabul qilinsa, muallifga xabar beriladi</li>
+                  <li>Maqola chop etilgach, muallifga PDF nusxasi yuboriladi</li>
+                </ul>
+              </div>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

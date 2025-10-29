@@ -62,11 +62,10 @@ const JournalDetail = () => {
                 );
                 setJournal(journalData);
 
-                // Fetch issues for this journal
+                // Fetch issues for this journal and sort by publication date (newest first)
                 const issuesResponse = await apiClient.get(`/issues/?journal=${journalType}`);
-                // Sort issues by publication date (oldest first)
                 const sortedIssues = issuesResponse.data.sort((a: Issue, b: Issue) => 
-                    new Date(a.published_date).getTime() - new Date(b.published_date).getTime()
+                    new Date(b.published_date).getTime() - new Date(a.published_date).getTime()
                 );
                 setIssues(sortedIssues);
             } catch (error) {

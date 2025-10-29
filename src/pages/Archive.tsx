@@ -43,13 +43,13 @@ const Archive = () => {
                 const journalsResponse = await apiClient.get('/journals/');
                 const journalsData = journalsResponse.data;
 
-                // Group issues by journal
+                // Group issues by journal and sort by published_date (newest first)
                 const journalsWithIssues = journalsData.map((journal: any) => ({
                     ...journal,
                     issues: (issuesData || []).filter((issue: Issue) => 
                         issue.journal_type === journal.short_name
                     ).sort((a: Issue, b: Issue) => 
-                        new Date(a.published_date).getTime() - new Date(b.published_date).getTime()
+                        new Date(b.published_date).getTime() - new Date(a.published_date).getTime()
                     )
                 }));
 

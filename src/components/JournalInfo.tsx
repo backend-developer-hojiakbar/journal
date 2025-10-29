@@ -59,6 +59,53 @@ const JournalInfo = () => {
                     </div>
                 </div>
 
+                {/* Journal Requirements Section */}
+                <div className="mt-12 bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Jurnal Talablari</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-white p-5 rounded-lg shadow-sm">
+                            <h4 className="text-lg font-semibold text-blue-700 mb-3">Maqola Talablari</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                                <li>Maqola hajmi 8-12 bet (15 000-20 000 belgi)</li>
+                                <li>Maqola uch tilga tarjima qilinishi shart</li>
+                                <li>15-20 ta ilmiy manba talab qilinadi</li>
+                                <li>DOC/DOCX va PDF formatlarda yuborish</li>
+                            </ul>
+                        </div>
+                        
+                        <div className="bg-white p-5 rounded-lg shadow-sm">
+                            <h4 className="text-lg font-semibold text-blue-700 mb-3">Muallif Talablari</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                                <li>ORCID ID (majburiy emas, tavsiya etiladi)</li>
+                                <li>To'liq F.I.SH. ko'rsatilishi kerak</li>
+                                <li>Ilmiy daraja va unvon ko'rsatilishi</li>
+                                <li>Ish joyi va lavozimi ko'rsatilishi</li>
+                            </ul>
+                        </div>
+                        
+                        <div className="bg-white p-5 rounded-lg shadow-sm">
+                            <h4 className="text-lg font-semibold text-blue-700 mb-3">Formatlash Talablari</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                                <li>Shrift: Times New Roman, 12 punkt</li>
+                                <li>Qatorlar orasi: 1.5</li>
+                                <li>Chapdan chegara: 3 sm, o'ngdan: 2 sm</li>
+                                <li>Yuqoridan va pastdan chegara: 2 sm</li>
+                            </ul>
+                        </div>
+                        
+                        <div className="bg-white p-5 rounded-lg shadow-sm">
+                            <h4 className="text-lg font-semibold text-blue-700 mb-3">Yuborish Talablari</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                                <li>Ilmiy-redaktor ko'rib chiqadi</li>
+                                <li>Plagiat tekshiruvi amalga oshiriladi</li>
+                                <li>Muvaffaqiyatli qabul qilinsa xabar beriladi</li>
+                                <li>Chop etilgach PDF nusxasi yuboriladi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 {/* {!loading && latestYear && (
                     <div className="mt-12">
                         <h3 className="text-2xl text-center font-semibold text-gray-900 mb-6">So'nggi nashrlar:</h3>

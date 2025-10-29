@@ -22,7 +22,7 @@ const RecentIssues = () => {
     useEffect(() => {
         const fetchRecentIssues = async () => {
             try {
-                // Fetch all issues and sort by publication date
+                // Fetch all issues and sort by publication date (newest first)
                 const response = await apiClient.get('/issues/');
                 const allIssues = response.data;
                 
@@ -98,6 +98,9 @@ const RecentIssues = () => {
                                             <h3 className="text-green-700 font-bold text-lg">
                                                 {formatIssueTitle(issue)}
                                             </h3>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                {new Date(issue.published_date).toLocaleDateString('uz-UZ')}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
