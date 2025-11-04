@@ -9,7 +9,7 @@ const Current = () => {
     const [issue, setIssue] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [articles, setArticles] = useState<any[]>([]);
-    const [sortBy, setSortBy] = useState<'date' | 'views'>('date');
+    const [sortBy, setSortBy] = useState<'date' | 'views' | 'pages'>('date');
 
     useEffect(() => {
         const fetchCurrentIssue = async () => {
@@ -49,9 +49,18 @@ const Current = () => {
                 if (sortBy === 'date') {
                     // Sort by article ID (assuming higher ID means newer)
                     return b.id - a.id;
-                } else {
+                } else if (sortBy === 'views') {
                     // Sort by views (descending)
                     return (b.views || 0) - (a.views || 0);
+                } else {
+                    // Sort by pages (ascending)
+                    // Extract page numbers from pages string (e.g., "15-20" -> 15)
+                    const getPageNumber = (pages: string) => {
+                        if (!pages) return 0;
+                        const match = pages.match(/^(\d+)/);
+                        return match ? parseInt(match[1], 10) : 0;
+                    };
+                    return getPageNumber(a.pages) - getPageNumber(b.pages);
                 }
             });
             setArticles(sortedArticles);
@@ -76,11 +85,12 @@ const Current = () => {
                         <span className="text-gray-700">Saralash:</span>
                         <select 
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as 'date' | 'views')}
+                            onChange={(e) => setSortBy(e.target.value as 'date' | 'views' | 'pages')}
                             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
                             <option value="date">Yaratilgan sana</option>
                             <option value="views">Ko'rishlar soni</option>
+                            <option value="pages">Sahifalar bo'yicha</option>
                         </select>
                     </div>
                 </div>
@@ -91,10 +101,10 @@ const Current = () => {
                                 {article.translations?.[0]?.title || "Nomsiz maqola"}
                             </h2>
                             <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4 gap-x-4 gap-y-1">
-                                <span>{article.authors ? article.authors.map(a => `${a.last_name} ${a.first_name.charAt(0)}.`).join(", ") : "Noma'lum muallif"}</span>
+                                <span>{article.authors ? article.authors.map((a: any) => `${a.last_name} ${a.first_name.charAt(0)}.`).join(", ") : "Noma'lum muallif"}</span>
                                 <span className="flex items-center"><FileText className="h-4 w-4 mr-1" /> {article.pages || "N/A"}</span>
                                 <span className="flex items-center"><Eye className="h-4 w-4 mr-1" /> {article.views || 0}</span>
-                                <span className="flex items-center"><Calendar className="h-4 w-4 mr-1" /> {new Date(article.id).toLocaleDateString('uz-UZ')}</span>
+                                <span className="flex items-center"><Calendar className="h-4 w-4 mr-1" /> {new Date(issue.published_date).toLocaleDateString('uz-UZ')}</span>
                             </div>
                             <p className="text-gray-600 mb-4">
                                 <span className="font-semibold text-gray-800">Annotatsiya:</span> {article.translations?.[0]?.abstract || "Annotatsiya mavjud emas"}
